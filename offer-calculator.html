@@ -345,10 +345,10 @@ function update(){
   const pubWins = R.pubTotal >= R.stTotal;
   const diff = Math.abs(R.gap);
   const ul = (c,t) => `text-decoration:underline;text-decoration-color:var(${c});text-decoration-thickness:${t}px;text-underline-offset:5px`;
-  const chip = (bg,fg) => `background:var(${bg});color:var(${fg});padding:0 .2em;white-space:nowrap;-webkit-box-decoration-break:clone;box-decoration-break:clone`;
-  let verdict = diff < 500 ? 'On average, the two offers are worth about the same.'
-    : pubWins ? `On average, the <span style="${ul('--pub',4)}">public company</span> offer is worth <span style="${chip('--pub','--cream')}">${short(diff)} more per year</span>.`
-              : `On average, the <span style="${ul('--st',4)}">startup</span> offer is worth <span style="${chip('--st','--ink')}">${short(diff)} more per year</span>.`;
+  const chip = (bg,fg) => `background:var(${bg});color:var(${fg});padding:.16em .3em .1em;white-space:nowrap;-webkit-box-decoration-break:clone;box-decoration-break:clone`;
+  let verdict = diff < 500 ? 'Your two offers are worth about the same.'
+    : pubWins ? `Your <span style="${ul('--pub',4)}">public company</span> offer is worth <span style="${chip('--pub','--cream')}">~${short(diff)} more per year</span>.`
+              : `Your <span style="${ul('--st',4)}">startup</span> offer is worth <span style="${chip('--st','--ink')}">~${short(diff)} more per year</span>.`;
 
   let brk = '';
   const b = R.breakeven;
