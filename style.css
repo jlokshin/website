@@ -143,17 +143,8 @@ body.home::after { display: none; }
 .bar nav a { padding-bottom: 2px; border-bottom: 3px solid transparent; }
 .bar nav a:hover, .bar nav a[aria-current] { border-color: var(--red); }
 
-.hero {
-  position: relative; overflow: hidden;
-  margin: 2.5rem 0 1.75rem; padding: 0;
-  display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem;
-}
-.hero h1 { font-family: "League Spartan", "Jost", sans-serif; font-size: clamp(2.5rem, 7vw, 4.25rem); line-height: 0.9; font-weight: 800; letter-spacing: -0.01em; text-transform: uppercase; }
-.hero .shapes { display: flex; gap: 0.5rem; align-items: flex-end; flex-shrink: 0; }
-.hero .shapes i { display: block; }
-.hero .s1 { width: 3rem; height: 1.5rem; background: var(--yellow); border-radius: 0 0 3rem 3rem; align-self: flex-start; }
-.hero .s2 { width: 1.5rem; height: 3rem; background: var(--red); }
-.hero .s3 { width: 3rem; height: 1.5rem; background: var(--blue); border-radius: 3rem 3rem 0 0; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.bar + .sr + .prose, .bar + .sr + .entries { margin-top: 2.5rem; }
 
 .entries { list-style: none; }
 .entries li { border-top: 2px solid var(--ink); }
@@ -185,8 +176,6 @@ body.home::after { display: none; }
   .bar nav { gap: 1rem; }
   .entries a, .entries .row { grid-template-columns: 1rem 1fr; }
   .entries .meta { grid-column: 2; }
-  .hero .shapes { gap: 0.3rem; }
-  .hero .s1, .hero .s3 { width: 2rem; height: 1rem; } .hero .s1 { border-radius: 0 0 2rem 2rem; } .hero .s3 { border-radius: 2rem 2rem 0 0; } .hero .s2 { width: 1rem; height: 2rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
