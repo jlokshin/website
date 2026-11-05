@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Big Tech or Startup? Offer Calculator · Jacob Lokshin</title>
+  <meta name="description" content="Compare a big tech offer to a startup offer: what each is worth per year, and how big the startup's exit has to be before you come out ahead.">
+  <link rel="preload" href="fonts/league-spartan-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="canonical" href="https://lokshin.co/offer-calculator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Jacob Lokshin">
+  <meta property="og:title" content="Will you make more money in big tech or the hot startup?">
+  <meta property="og:description" content="A calculator for comparing a public company offer to a startup offer.">
+  <meta property="og:url" content="https://lokshin.co/offer-calculator.html">
+  <meta property="og:image" content="https://lokshin.co/img/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="img/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <link rel="stylesheet" href="style.css?v=30">
+<style>
+/* Fallbacks so the page still looks right if style.css isn't loaded (same rules as the site). */
+:root{--cream:#f9e7c9;--ink:#1a1a1a;--red:#d83616;--blue:#235071;--yellow:#f9a904}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--cream);color:var(--ink);font-family:"Jost","Futura","Century Gothic",system-ui,sans-serif}
+a{color:inherit;text-decoration:none}
+.page{max-width:62rem;margin:0 auto;padding:1.5rem 1.5rem 5rem}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding-bottom:1.25rem;border-bottom:4px solid var(--ink)}
+.bar .home{font-family:"League Spartan","Jost",sans-serif;font-weight:800;font-size:1.45rem;letter-spacing:.01em;text-transform:uppercase}
+.bar nav{display:flex;gap:1.5rem;font-weight:600;font-size:.85rem;letter-spacing:.2em;text-transform:uppercase}
+.bar nav a{padding-bottom:2px;border-bottom:3px solid transparent}
+.bar nav a:hover,.bar nav a[aria-current]{border-color:var(--red)}
+.contact{list-style:none;margin-top:2rem;display:flex;flex-wrap:wrap;gap:.75rem 2rem;font-weight:700;font-size:.9rem;letter-spacing:.18em;text-transform:uppercase}
+.contact a{border-bottom:3px solid var(--red);padding-bottom:2px}
+.foot{margin-top:4rem;font-size:.75rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;opacity:.7}
+@media (max-width:760px){.bar{flex-direction:column;align-items:flex-start}.bar nav{gap:1rem}}
+.calc .assume .lab{white-space:nowrap}
+.calc .assume .lab .tip-pop{white-space:normal}
+.calc button.toggle{display:flex;align-items:center;gap:10px;width:100%;padding:0;border:0;border-radius:0;background:transparent;text-align:left;letter-spacing:.18em;font-size:.75rem}
+.calc button.toggle:hover{background:transparent}
+.calc button.toggle .t{font-weight:700}
+.calc button.toggle .s{flex:1;font-weight:600;letter-spacing:.06em;text-transform:none;font-size:.85rem;color:rgba(26,26,26,.68)}
+.calc button.toggle .chev{width:26px;height:26px;border:2px solid var(--ink);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:1rem;letter-spacing:0;line-height:1}
+.calc button.toggle:hover .chev{background:var(--yellow)}
+.calc #scenBody{margin-top:.75rem}
+/* Calculator styles. Fonts, palette, header and footer come from the site's style.css. */
+.calc{
+  --paper:#fdf3e3; --field:#fffaf1; --muted:rgba(26,26,26,.68); --line:rgba(26,26,26,.18);
+  --pub:var(--blue); --st:var(--yellow); --good:#2f7a4b; --short:#eeb3a3;
+  font-weight:500; font-size:16px; line-height:1.5; margin-top:2.5rem;
+}
+.calc h1{font-family:"League Spartan","Jost",sans-serif;font-weight:800;font-size:clamp(2rem,5vw,3.1rem);line-height:1.02;letter-spacing:-.01em;margin:0 0 1.1rem;max-width:24ch}
+.calc h2{font-size:.75rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin:0 0 .9rem}
+.calc .lede{max-width:40rem;font-size:1.2rem;line-height:1.6;margin:0 0 1rem}
+.calc .lede + .lede{margin-bottom:1.75rem}
+.calc .card{background:var(--paper);border:2px solid var(--ink);padding:1.25rem}
+.calc .stack{display:grid;gap:1.25rem}
+.calc .two{display:grid;gap:1.25rem;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));align-items:start}
+.calc .assume-card{padding:.9rem 1.25rem}
+.calc .assume-card h2{margin-bottom:.6rem}
+.calc .assume{display:flex;flex-wrap:wrap;gap:.6rem 1.75rem;align-items:center}
+.calc .assume .f{display:flex;align-items:center;gap:8px}
+.calc .assume .lab{font-size:.95rem;font-weight:600;display:flex;align-items:center;gap:6px}
+.calc .assume .inp{width:96px;flex:none}
+.calc .assume .inp.has-suf input{padding:4px 42px 4px 6px;font-size:.95rem}
+.calc .tip>button{position:relative}
+.calc .tip>button::after{content:"";position:absolute;inset:-11px}
+.calc .tip{position:relative;display:inline-flex}
+.calc .tip>button{width:18px;height:18px;padding:0;border-radius:50%;font:700 11px/15px "Jost",sans-serif;letter-spacing:0;text-transform:none;color:var(--ink);border:1.5px solid var(--ink);background:transparent;cursor:help}
+.calc .tip>button:hover,.calc .tip.open>button{color:var(--cream);background:var(--ink)}
+.calc .tip-pop{display:none;position:absolute;top:24px;left:-8px;z-index:50;width:260px;background:var(--ink);color:var(--cream);font-size:.82rem;font-weight:500;line-height:1.45;letter-spacing:0;text-transform:none;padding:10px 12px}
+.calc .tip:hover .tip-pop,.calc .tip.open .tip-pop{display:block}
+.calc .row{display:grid;grid-template-columns:1fr 150px;gap:8px;align-items:center;margin:9px 0}
+.calc .row label{font-size:1rem}
+.calc .row small{display:block;color:var(--muted);font-size:.8rem;line-height:1.3}
+.calc .inp{position:relative}
+.calc .inp input{width:100%;padding:7px 10px;border:2px solid var(--ink);border-radius:0;background:var(--field);color:var(--ink);font:600 1rem "Jost",sans-serif;text-align:right;font-variant-numeric:tabular-nums}
+.calc .inp input:focus{outline:3px solid var(--yellow);outline-offset:0}
+.calc .inp .pre,.calc .inp .suf{position:absolute;top:50%;transform:translateY(-50%);font-size:.8rem;color:var(--muted);pointer-events:none}
+.calc .inp .pre{left:10px}.calc .inp .suf{right:10px}
+.calc .inp.has-pre input{padding-left:22px}.calc .inp.has-suf input{padding-right:32px}
+.calc .tag{display:inline-block;font-size:.75rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;padding:4px 10px;margin-bottom:.5rem;color:var(--cream)}
+.calc .pub .tag{background:var(--pub)} .calc .st .tag{background:var(--st);color:var(--ink)}
+.calc .scen tr.sum td{font-weight:700;border-bottom:0;padding-top:9px}
+.calc .scen tr.sum td:last-child{padding-right:28px}
+.calc .scen tr.sum.off td:last-child{color:var(--red)}
+.calc .pub{border-top:10px solid var(--pub)} .calc .st{border-top:10px solid var(--st)}
+.calc .sec{margin-top:1rem;padding-top:1rem;border-top:2px solid var(--ink)}
+.calc .note{color:var(--muted);font-size:.85rem;margin:6px 0 0}
+.calc table{width:100%;border-collapse:collapse;font-size:.95rem}
+.calc th,.calc td{padding:7px 4px;text-align:right;border-bottom:1px solid var(--line)}
+.calc th:first-child,.calc td:first-child{text-align:left}
+.calc th{font-weight:700;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase}
+.calc .scen .inp{display:inline-block;width:80px}
+.calc .scen .inp input{padding:5px 24px 5px 6px;font-size:.9rem}
+.calc .btns{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}
+.calc button{font:700 .72rem "Jost",sans-serif;letter-spacing:.14em;text-transform:uppercase;padding:7px 13px;border-radius:999px;border:2px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+.calc button:hover{background:var(--yellow)}
+.calc button.on{background:var(--ink);color:var(--cream)}
+.calc .warn{color:var(--red);font-size:.8rem;margin-top:4px}
+.calc .verdict{font-family:"League Spartan","Jost",sans-serif;font-weight:700;font-size:clamp(1.4rem,3vw,1.9rem);line-height:1.3;margin:0 0 .4rem}
+.calc .sub{font-size:1.05rem;margin:0 0 1.25rem}
+.calc .sub b{font-weight:700}
+.calc .totals{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.calc .tot{padding:.9rem 1rem;color:var(--cream)}
+.calc .tot.p{background:var(--pub)} .calc .tot.s{background:var(--st);color:var(--ink)}
+.calc .tot .lbl{font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;opacity:.85}
+.calc .tot .num{font-family:"League Spartan","Jost",sans-serif;font-weight:800;font-size:2rem;line-height:1.2;font-variant-numeric:tabular-nums}
+.calc .tot .brk{font-size:.85rem;opacity:.85;margin-top:2px}
+.calc .bars{display:grid;gap:8px;margin-top:6px}
+.calc .bar-row{display:grid;grid-template-columns:120px 1fr;gap:10px;align-items:center;font-size:.85rem}
+.calc .bar-row .lab{color:var(--muted);line-height:1.25}
+.calc .bar-row .lab b{color:var(--ink);font-weight:700}
+.calc .track{position:relative;height:26px}
+.calc .fill{position:absolute;left:0;top:3px;height:20px;background:var(--short)}
+.calc .fill.win{background:var(--good)}
+.calc .val{position:absolute;top:3px;font-size:.8rem;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;z-index:2;background:var(--paper);padding:0 3px}
+.calc .fill + .val[style*="color:#fff"]{background:transparent}
+.calc .mark{position:absolute;top:-4px;bottom:-4px;width:3px;background:var(--pub)}
+.calc .legend{display:flex;gap:16px;font-size:.8rem;color:var(--muted);margin-top:12px;flex-wrap:wrap}
+.calc .legend i{display:inline-block;width:11px;height:11px;margin-right:5px;vertical-align:-1px}
+.calc .callout{background:var(--field);border-left:8px solid var(--yellow);padding:.9rem 1rem;margin-top:1.25rem;font-size:1rem}
+.calc .callout b{font-weight:700}
+.calc .top{display:flex;gap:8px;flex-wrap:wrap;margin:0}
+.dock{position:fixed;left:50%;bottom:calc(var(--b,12px) + 12px);transform:translateX(-50%);z-index:45;display:flex;gap:14px;align-items:center;white-space:nowrap;
+  background:var(--ink);color:var(--cream);padding:10px 18px;border:0;border-radius:999px;font:600 .9rem "Jost",sans-serif;cursor:pointer;box-shadow:0 6px 22px rgba(0,0,0,.28);transition:opacity .2s,transform .2s}
+.dock.hide{opacity:0;pointer-events:none;transform:translate(-50%,16px)}
+.dock i{display:inline-block;width:10px;height:10px;margin-right:6px;vertical-align:0;border:1px solid var(--cream)}
+.dock .gap{font-weight:700;padding:2px 10px;border-radius:999px;background:var(--cream);color:var(--ink)}
+.dock .gap.p{background:var(--blue);color:var(--cream)}
+.dock .gap.s{background:var(--yellow);color:var(--ink)}
+@media (max-width:520px){ .dock{gap:10px;padding:9px 14px;font-size:.8rem} .dock .lbl{display:none} }
+.calc .notes{margin-top:2.5rem;max-width:44rem;font-size:.9rem;line-height:1.6;color:var(--muted)}
+.calc .notes p + p{margin-top:.9rem}
+.calc .notes b{color:var(--ink);font-weight:700}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);z-index:60;background:var(--ink);color:var(--cream);padding:8px 14px;font-size:.85rem;font-weight:600;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+@media (max-width:520px){ .calc .totals{grid-template-columns:1fr} .calc .row{grid-template-columns:1fr 152px} .calc .bar-row{grid-template-columns:88px 1fr} .calc .card{padding:1rem} .calc .assume{display:grid;grid-template-columns:1fr;gap:.5rem} .calc .assume .f{justify-content:space-between} }
+</style>
+</head>
+<body>
+<div class="page">
+    <header class="bar">
+      <a class="home" href="index.html">Jacob Lokshin</a>
+      <nav>
+        <a href="writing.html" aria-current="page">Writing</a>
+        <a href="about.html">About</a>
+        <a href="https://substack.com/@loks" rel="noopener">Subscribe ↗</a>
+      </nav>
+    </header>
+  <main class="calc">
+  <h1>Will you make more money in big tech or the hot startup?</h1>
+  <p class="lede" style="margin-bottom:12px">Money shouldn't be the only reason to choose a job. But, comp can be confusing and you should understand the math before making a decision.</p>
+  <p class="lede">Enter your offers to see what each is worth per year, and how big the startup's exit has to be before you come out ahead.</p>
+
+  <div class="stack">
+    <div class="card assume-card">
+      <h2>Assumptions</h2>
+      <div class="assume" id="assume"></div>
+    </div>
+
+    <div class="two">
+      <div class="card pub">
+        <span class="tag">Public company</span>
+        <div id="pubFields"></div>
+      </div>
+      <div class="card st">
+        <span class="tag">Startup</span>
+        <div id="stFields"></div>
+      </div>
+    </div>
+
+    <div class="card" id="result"></div>
+    <div class="top">
+      <button id="copyLink">Copy link with my numbers</button>
+      <button id="reset">Reset to example</button>
+    </div>
+  </div>
+
+  <div class="notes">
+    <p><b>How it's calculated.</b> All figures are pre-tax and per year, averaged over the years you expect to stay. <b>Public:</b> base + bonus + signing bonus ÷ years + RSUs, with RSUs changing in value each year by the expected stock growth you set. <b>Startup:</b> base + bonus + signing bonus ÷ years + options. Options vest over 4 years with a 1-year cliff. For each exit scenario, the future share price is today's price × the exit multiple, reduced by dilution and the preference/illiquidity haircut. Option value is vested options × (future price − strike), or zero if that's negative. The scenarios are probability-weighted, discounted back to today, and divided by the years you stay.</p>
+    <p><b>Preset assumptions.</b> <b>Startup dilution: 3% a year.</b> Each funding round typically sells 15–25% of the company; spread across the time between rounds, that's roughly 8–10% a year early on and 2–5% for late-stage companies. <b>Preference haircut: 10%.</b> Investors' preferred stock is paid back before common stock (what you get), which barely matters in a big exit but can wipe out common in a small one; this is a judgment call, not an industry average. <b>Discount rate: 8% a year.</b> Roughly what the same money would earn in a stock index fund; the chance the startup fails is already in your exit odds, so this only covers waiting years to get paid.</p>
+    <p><b>Caveats.</b> This is a rough model, not tax or financial advice. It ignores taxes (including ISO/AMT and 83(b) elections), liquidation-preference waterfalls, refreshers, exercise windows after you leave, and the gap between the 409A price and the preferred price. The probabilities you enter matter most, so use it to compare the offers fairly and to frame a negotiation, not as a forecast.</p>
+  </div>
+  </main>
+    <ul class="contact">
+      <li><a href="mailto:jacob@lokshin.co">jacob@lokshin.co</a></li>
+      <li><a href="https://www.linkedin.com/in/jlokshin/" rel="noopener">LinkedIn</a></li>
+      <li><a href="https://substack.com/@loks" rel="noopener">Substack</a></li>
+    </ul>
+    <p class="foot">© Jacob Lokshin</p>
+</div>
+<button class="dock hide" id="dock" type="button" aria-label="Jump to result"></button>
+<div class="toast" id="toast"></div>
+
+<script>
+// CORE-START
+const VEST_YEARS = 4;
+const ROWS = ['Bust','Weak','Solid','Strong','Home run'];
+const PRESETS = {
+  late:  [{p:10,m:0},{p:20,m:0.5},{p:30,m:1},{p:30,m:2},{p:10,m:4}],
+  growth:[{p:25,m:0},{p:15,m:0.5},{p:25,m:1},{p:25,m:3},{p:10,m:8}],
+  early: [{p:40,m:0},{p:20,m:1},{p:20,m:3},{p:15,m:10},{p:5,m:30}]
+};
+function calc(S){
+  const g = S.g, P = S.pub, T = S.st;
+  const yrs = Math.max(g.years, 0.01);
+  const n = Math.max(1, Math.round(g.years));
+  let f = 0; for(let t=1;t<=n;t++) f += Math.pow(1+g.growth/100, t);
+  const rsuAnnual = P.rsu * f / n;
+  const pubCash = P.base + P.bonus + P.signing / Math.max(g.years,1);
+  const pubTotal = pubCash + rsuAnnual;
+
+  const vested = T.options * (g.years < 1 ? 0 : Math.min(g.years, VEST_YEARS) / VEST_YEARS);
+  const k = Math.pow(1 - g.dilution/100, g.years) * (1 - g.haircut/100); // future price per 1x multiple, per $ of today's price
+  const disc = Math.pow(1 + g.discount/100, g.years);
+  const stCash = T.base + T.bonus + T.signing / Math.max(g.years,1);
+  const totalP = T.scen.reduce((a,s)=>a+s.p,0);
+  const norm = totalP || 1;
+  let ev = 0;
+  const rows = T.scen.map((s,i)=>{
+    const prob = s.p / norm;
+    const fut = T.price * s.m * k;
+    const gain = vested * Math.max(0, fut - T.strike);
+    const eqYr = gain / disc / yrs;
+    ev += prob * eqYr;
+    return {name:ROWS[i], m:s.m, prob, fut, gain, eqYr, total: stCash + eqYr};
+  });
+  const stTotal = stCash + ev;
+  const need = pubTotal - stCash; // equity $/yr startup must deliver to tie
+  let breakeven;
+  if (need <= 0) breakeven = {type:'cash'};
+  else if (vested <= 0 || T.price <= 0 || k <= 0) breakeven = {type:'none'};
+  else breakeven = {type:'m', m: (T.strike + need * yrs * disc / vested) / (T.price * k)};
+  const perOption = T.options > 0 ? ev / T.options : 0;
+  return {rsuAnnual, pubCash, pubTotal, stCash, stEq:ev, stTotal, rows, vested, breakeven, perOption,
+    gap: pubTotal - stTotal, totalP,
+    pWin: rows.reduce((a,r)=>a + (r.total >= pubTotal ? r.prob : 0), 0)};
+}
+// CORE-END
+
+const DEFAULT = () => ({
+  g:{years:4, growth:5, dilution:3, haircut:10, discount:8},
+  pub:{base:220000, bonus:30000, signing:25000, rsu:100000},
+  st:{base:190000, bonus:0, signing:0, options:100000, strike:2.5, price:6, valuation:500000000, preset:'growth',
+      scen:PRESETS.growth.map(x=>({...x}))}
+});
+let S = load() || DEFAULT();
+let scenOpen = false; // exit scenarios start collapsed
+// dilution, haircut and discount are fixed presets (explained in the notes)
+Object.assign(S.g, {dilution:3, haircut:10, discount:8});
+
+function load(){
+  try{ const m = location.hash.match(/s=([^&]+)/); if(!m) return null;
+    const s = JSON.parse(decodeURIComponent(escape(atob(m[1])))); return (s&&s.g&&s.pub&&s.st)?s:null; }catch(e){ return null; }
+}
+let saveT;
+function save(){ clearTimeout(saveT); saveT=setTimeout(()=>{ try{ history.replaceState(null,'','#s='+btoa(unescape(encodeURIComponent(JSON.stringify(S))))); }catch(e){} },250); }
+
+// formatting
+const commas = s => s.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+const show = v => { if(v===''||v==null||isNaN(v)) return ''; const [i,d]=String(v).split('.'); return commas(i)+(d?'.'+d:''); };
+const num = s => { const v = parseFloat(String(s).replace(/[^0-9.\-]/g,'')); return isNaN(v)?0:v; };
+const $ = n => (isFinite(n)?Math.round(n):0).toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+const $2 = n => (isFinite(n)?n:0).toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2});
+const short = n => { const a=Math.abs(n); return a>=1e9?'$'+(n/1e9).toFixed(a>=1e10?0:1).replace(/\.0$/,'')+'B':a>=1e6?'$'+(n/1e6).toFixed(a>=1e8?0:1).replace(/\.0$/,'')+'M':a>=1e3?'$'+Math.round(n/1e3)+'k':'$'+Math.round(n); };
+const pct = p => Math.round(p*100)+'%';
+const mult = m => (Math.round(m*10)/10).toLocaleString('en-US')+'×';
+
+function get(path){ return path.split('.').reduce((o,k)=>o[k],S); }
+function set(path,v){ const ks=path.split('.'); const last=ks.pop(); ks.reduce((o,k)=>o[k],S)[last]=v; }
+const DEC2 = ['st.strike','st.price'];
+const fmtField = (path, v) => DEC2.includes(path) && v !== '' && v != null ? show(Number(v).toFixed(2)) : show(v);
+function input(path, pre, suf){
+  return `<div class="inp ${pre?'has-pre':''} ${suf?'has-suf':''}">${pre?`<span class="pre">${pre}</span>`:''}<input type="text" inputmode="decimal" autocomplete="off" data-path="${path}" value="${fmtField(path, get(path))}">${suf?`<span class="suf">${suf}</span>`:''}</div>`;
+}
+const row = (label, help, path, pre, suf) => `<div class="row"><label>${label}${help?`<small>${help}</small>`:''}</label>${input(path,pre,suf)}</div>`;
+const af = (label, path, suf, tip) => `<div class="f"><div class="lab">${label}${tip?`<span class="tip"><button type="button" aria-label="What this means">?</button><span class="tip-pop" role="tooltip">${tip}</span></span>`:''}</div>${input(path,'',suf)}</div>`;
+const TIPS = {
+  years: 'How long you expect to stay. It is also when the startup is assumed to exit, and how long your signing bonus is spread over. Options vest over 4 years, so staying less leaves some unvested.',
+  growth: 'A rule of thumb, not a forecast. The S&amp;P 500 has returned about 10% a year over the long run including dividends, or roughly 7% from price alone. 5% is a conservative pick for a single stock; use 0% to assume flat.',
+  dilution: 'Each funding round typically sells 15–25% of the company to new investors, plus option-pool top-ups. Spread across the time between rounds, that works out to roughly 8–10% a year early on and 2–5% for late-stage companies. 3% assumes late stage.',
+  haircut: 'A judgment call, not an industry average. Investors hold preferred stock that gets paid back before common stock (what you get). That barely matters in a big exit but can wipe out common in a small one. 10% is a rough blend; use 20–30% if the company has raised a lot relative to its value.',
+  discount: 'Your opportunity cost: roughly what the same money would earn in a stock index fund (about 7–10% a year historically). The chance the startup fails is already in your exit odds, so this only accounts for waiting years to get paid.'
+};
+
+function render(){
+  document.getElementById('assume').innerHTML =
+    af('Years you\'d stay','g.years','yrs',TIPS.years) +
+    af('Public stock growth','g.growth','%/yr',TIPS.growth);
+
+  document.getElementById('pubFields').innerHTML =
+    row('Base salary','','pub.base','$') +
+    row('Target bonus','per year','pub.bonus','$') +
+    row('Signing bonus','one-time','pub.signing','$') +
+    row('Stock (RSUs)','$ value vesting each year','pub.rsu','$');
+
+  const T = S.st;
+  document.getElementById('stFields').innerHTML =
+    row('Base salary','','st.base','$') +
+    row('Target bonus','per year','st.bonus','$') +
+    row('Signing bonus','one-time','st.signing','$') +
+    `<div class="sec"><h2>Stock options</h2>
+      ${row('Number of options','total grant, 4-year vest','st.options','#')}
+      ${row('Strike price','what you pay per share','st.strike','$')}
+      ${row('Current share price','latest round (preferred) price','st.price','$')}
+      ${row('Company valuation','optional, for context','st.valuation','$')}
+      <p class="note" id="optNote"></p>
+    </div>
+    <div class="sec">
+      <button type="button" class="toggle" id="scenToggle" aria-expanded="${scenOpen}" aria-controls="scenBody">
+        <span class="t">Exit scenarios</span><span class="s" id="scenSum"></span><span class="chev" aria-hidden="true">${scenOpen?'−':'+'}</span>
+      </button>
+      <div id="scenBody" ${scenOpen?'':'hidden'}>
+      <div class="btns">${[['late','Late stage'],['growth','Growth stage'],['early','Early stage']].map(([k,l])=>`<button data-preset="${k}" class="${T.preset===k?'on':''}">${l}</button>`).join('')}</div>
+      <table class="scen"><tr><th>Outcome</th><th>Exit vs. today</th><th>Chance</th></tr>
+      ${T.scen.map((s,j)=>`<tr><td>${ROWS[j]}<div class="note" style="margin:0" id="ev-${j}"></div></td><td>${input('st.scen.'+j+'.m','','×')}</td><td>${input('st.scen.'+j+'.p','','%')}</td></tr>`).join('')}
+      <tr class="sum" id="psumRow"><td>Total</td><td></td><td id="psum"></td></tr>
+      </table>
+      </div>
+      <div class="warn" id="warn"></div>
+    </div>`;
+  update();
+}
+
+function update(){
+  const R = calc(S), T = S.st;
+  // option note + scenario labels
+  const grantToday = T.options * Math.max(0, T.price - T.strike);
+  document.getElementById('optNote').textContent =
+    `Paper value today: ${$(grantToday)} (${$2(Math.max(0,T.price-T.strike))} spread × ${show(T.options)} options).` +
+    (T.valuation>0 && T.price>0 ? ` About ${(T.options*T.price/T.valuation*100).toFixed(3)}% of the company.` : '');
+  T.scen.forEach((s,j)=>{
+    const el = document.getElementById('ev-'+j); if(!el) return;
+    el.textContent = T.valuation>0 ? (s.m===0 ? 'shares worth $0' : `exit at ~${short(T.valuation*s.m)}`) : '';
+  });
+  const PNAMES = {late:'Late-stage odds', growth:'Growth-stage odds', early:'Early-stage odds'};
+  document.getElementById('scenSum').textContent = PNAMES[T.preset] || 'Custom odds';
+  const off = Math.abs(R.totalP-100)>0.01;
+  document.getElementById('psum').textContent = (Math.round(R.totalP*10)/10)+'%';
+  document.getElementById('psumRow').classList.toggle('off', off);
+  document.getElementById('warn').textContent = off ? 'Chances should add up to 100%. Until they do, they\'re scaled to fit.' : '';
+
+  // verdict
+  const pubWins = R.pubTotal >= R.stTotal;
+  const diff = Math.abs(R.gap);
+  const ul = (c,t) => `text-decoration:underline;text-decoration-color:var(${c});text-decoration-thickness:${t}px;text-underline-offset:5px`;
+  const hl = 'background:linear-gradient(transparent 58%, var(--yellow) 58%);padding:0 2px';
+  let verdict = diff < 500 ? 'On average, the two offers are worth about the same.'
+    : pubWins ? `On average, the <span style="${ul('--pub',3)}">public company</span> offer is worth <span style="color:var(--pub)">${short(diff)} more per year</span>.`
+              : `On average, the <span style="${ul('--st',5)}">startup</span> offer is worth <span style="${hl}">${short(diff)} more per year</span>.`;
+
+  let brk = '';
+  const b = R.breakeven;
+  if (b.type==='cash') brk = 'The startup comes out ahead on cash alone, before its equity.';
+  else if (b.type==='none') brk = 'Add options and a share price to see the breakeven exit.';
+  else brk = `The startup needs to exit at <b>${mult(b.m)}</b> today's share price${T.valuation>0?` (~${short(T.valuation*b.m)})`:''} to match the public offer. Your scenarios give that a <b>${pct(R.pWin)}</b> chance.`;
+
+  const max = Math.max(R.pubTotal, ...R.rows.map(r=>r.total)) * 1.08 || 1;
+  const markL = R.pubTotal / max * 100;
+  const bars = R.rows.map(r=>{
+    const w = r.total / max * 100;
+    const win = r.total >= R.pubTotal;
+    const inside = w > 70;
+    return `<div class="bar-row"><div class="lab"><b>${r.name}</b> · ${mult(r.m)}<br>${pct(r.prob)} chance</div>
+      <div class="track"><div class="fill ${win?'win':''}" style="width:${w}%"></div>
+      <span class="val" style="${inside?`right:${100-w}%;margin-right:6px;color:#fff`:`left:${w}%;margin-left:6px`}">${short(r.total)}</span>
+      <div class="mark" style="left:${markL}%"></div></div></div>`;
+  }).join('');
+
+  let ask = '';
+  if (R.gap > 1) {
+    const opts = R.perOption > 0 ? Math.round(R.gap / R.perOption) : null;
+    ask = `<div class="callout"><b>Closing the gap.</b> To match the public offer on average, the startup would need to add
+      <b>${$(R.gap)}</b> to your base salary${opts!==null?`, or about <b>${show(opts)}</b> more options (each worth about ${$2(R.perOption)} per year on average)`:''}.</div>`;
+  } else if (R.gap < -1) {
+    const g = -R.gap, rsuFactor = S.pub.rsu > 0 ? R.rsuAnnual / S.pub.rsu : 1;
+    ask = `<div class="callout"><b>Closing the gap.</b> To match the startup offer on average, the public company would need to add
+      <b>${$(g)}</b> to your base salary, or about <b>${$(g / rsuFactor)}</b> per year in RSUs.</div>`;
+  }
+
+  document.getElementById('result').innerHTML = `
+    <h2>Result</h2>
+    <p class="verdict">${verdict}</p>
+    <p class="sub">${brk}</p>
+    <div class="totals">
+      <div class="tot p"><div class="lbl">Public company, per year</div><div class="num">${short(R.pubTotal)}</div>
+        <div class="brk">${short(R.pubCash)} cash + ${short(R.rsuAnnual)} RSUs</div></div>
+      <div class="tot s"><div class="lbl">Startup, per year (expected)</div><div class="num">${short(R.stTotal)}</div>
+        <div class="brk">${short(R.stCash)} cash + ${short(R.stEq)} options</div></div>
+    </div>
+    <h2>The startup offer in each scenario</h2>
+    <div class="bars">${bars}</div>
+    <div class="legend"><span><i style="background:var(--pub)"></i>Public offer</span><span><i style="background:var(--good)"></i>Startup beats public</span><span><i style="background:var(--short)"></i>Startup falls short</span></div>
+    ${ask}`;
+  const lead = diff < 500 ? 'About even' : (pubWins ? 'Public' : 'Startup') + ' wins +' + short(diff);
+  const leadCls = diff < 500 ? '' : (pubWins ? 'p' : 's');
+  document.getElementById('dock').innerHTML =
+    `<span><i style="background:var(--blue)"></i><span class="lbl">Public </span>${short(R.pubTotal)}</span>
+     <span><i style="background:var(--yellow)"></i><span class="lbl">Startup </span>${short(R.stTotal)}</span>
+     <span class="gap ${leadCls}">${lead}</span><span aria-hidden="true">↓</span>`;
+  save();
+}
+// pinned summary: visible while the result is still below the screen
+const dockEl = document.getElementById('dock'), resultEl = document.getElementById('result');
+dockEl.addEventListener('click', ()=> resultEl.scrollIntoView({behavior:'smooth', block:'start'}));
+if ('IntersectionObserver' in window) {
+  new IntersectionObserver(([e])=>{
+    dockEl.classList.toggle('hide', e.isIntersecting || e.boundingClientRect.top < 0);
+  }, {threshold:0.05}).observe(resultEl);
+} else dockEl.classList.add('hide');
+// two decimals on share prices once you leave the field
+document.addEventListener('focusout', e=>{
+  const el = e.target; if (el.dataset && DEC2.includes(el.dataset.path) && el.value !== '') el.value = fmtField(el.dataset.path, num(el.value));
+});
+
+// live comma formatting, keeping the caret in place
+document.addEventListener('input', e=>{
+  const el = e.target; if(!el.dataset.path) return;
+  const caret = el.selectionStart;
+  const before = el.value.slice(0, caret).replace(/[^0-9.]/g,'').length;
+  let clean = el.value.replace(/[^0-9.]/g,'');
+  const dot = clean.indexOf('.');
+  if (dot >= 0) clean = clean.slice(0,dot+1) + clean.slice(dot+1).replace(/\./g,'');
+  let [i,d] = clean.split('.');
+  i = (i||'').replace(/^0+(?=\d)/,'');
+  const out = commas(i) + (d!==undefined ? '.'+d : '');
+  el.value = out;
+  let pos = 0, count = 0;
+  while (pos < out.length && count < before){ if(/[0-9.]/.test(out[pos])) count++; pos++; }
+  el.setSelectionRange(pos,pos);
+  set(el.dataset.path, num(out));
+  if (el.dataset.path.startsWith('st.scen')) { S.st.preset = ''; document.querySelectorAll('[data-preset]').forEach(b=>b.classList.remove('on')); }
+  update();
+});
+document.addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  if (b.id==='scenToggle'){ scenOpen=!scenOpen; b.setAttribute('aria-expanded',scenOpen); b.querySelector('.chev').textContent=scenOpen?'−':'+'; document.getElementById('scenBody').hidden=!scenOpen; return; }
+  if (b.dataset.preset){ S.st.preset=b.dataset.preset; S.st.scen=PRESETS[b.dataset.preset].map(x=>({...x})); render(); }
+  else if (b.id==='reset'){ S = DEFAULT(); history.replaceState(null,'',location.pathname); render(); }
+  else if (b.id==='copyLink'){ save(); setTimeout(()=>{ (navigator.clipboard?navigator.clipboard.writeText(location.href):Promise.reject()).then(()=>toast('Link copied')).catch(()=>toast('Copy the URL from your address bar')); },300); }
+});
+// tooltips: hover on desktop, tap to toggle on touch; keep the popup on screen
+function placeTip(tip){
+  const pop = tip.querySelector('.tip-pop'); pop.style.left = '-8px';
+  const r = pop.getBoundingClientRect(), over = r.right - (window.innerWidth - 12);
+  if (over > 0) pop.style.left = (-8 - over) + 'px';
+}
+document.addEventListener('mouseover', e=>{ const t = e.target.closest('.tip'); if (t) placeTip(t); });
+document.addEventListener('click', e=>{
+  const t = e.target.closest('.tip');
+  document.querySelectorAll('.tip.open').forEach(o=>{ if (o!==t) o.classList.remove('open'); });
+  if (t && e.target.closest('.tip>button')) { t.classList.toggle('open'); placeTip(t); }
+});
+document.addEventListener('keydown', e=>{ if (e.key==='Escape') document.querySelectorAll('.tip.open').forEach(o=>o.classList.remove('open')); });
+function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
+render();
+</script>
+</body>
+</html>
