@@ -9,7 +9,7 @@
   <meta property="og:description" content="Writing, projects, and ideas.">
   <meta property="og:image" content="https://lokshin.co/img/art.webp">
   <link rel="preload" href="fonts/league-spartan-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="style.css?v=20">
+  <link rel="stylesheet" href="style.css?v=21">
 </head>
 <body class="home">
   <main class="stage">
@@ -30,10 +30,31 @@
 
       <dl class="contact-cta">
         <dt>Email</dt><dd><a href="mailto:jacob@lokshin.co">jacob@lokshin.co</a></dd>
-        <dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/jlokshin/" rel="noopener">jlokshin</a></dd>
-        <dt>Substack</dt><dd><a href="https://substack.com/@loks" rel="noopener">loks</a></dd>
+        <dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/jlokshin/" rel="noopener"><span class="hd">jlokshin</span><span class="nm">LinkedIn</span></a></dd>
+        <dt>Substack</dt><dd><a href="https://substack.com/@loks" rel="noopener"><span class="hd">loks</span><span class="nm">Substack</span></a></dd>
       </dl>
     </div>
   </main>
+<script>
+(function(){
+  var P=[9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,9999,1069,771,779,795,797,618,607,583,555,551,539,530,523,517,513,509,505,502,500,499,494,491,489,485,482,481,478,479,478,479,481,483,484,477,468,459,451,442,434,426,418,410,402,395,388,381,374,368,361,355,349,343,338,332,327,322,317,312,307,303,298,294,290,286,282,278,274,270,267,263,260,257,254,251,248,245,243,240,238,236,233,231,229,227,226,224,223,221,220,219,218,217,216,215,215,214,214,214,214,214,214,215,215,216,216,217,218,219,221,222,224,225,227,229,231,233,236,238,241,244,247,250,253,257,261,264,269,273,277,282,287,292,298,9999], B=8, W=1086;
+  var root=document.querySelector('.stage'), art=document.querySelector('.art');
+  function clash(){
+    var a=art.getBoundingClientRect(); if(!a.width) return false; var s=a.width/W;
+    var items=document.querySelectorAll('.menu a'), pad=14;
+    for(var i=0;i<items.length;i++){
+      var r=items[i].getBoundingClientRect();
+      var y0=Math.max(0,Math.floor((r.top-pad-a.top)/s/B)), y1=Math.min(P.length-1,Math.floor((r.bottom+pad-a.top)/s/B));
+      for(var y=y0;y<=y1;y++){ if(a.left+P[y]*s < r.right+pad) return true; }
+    }
+    return false;
+  }
+  function fit(){
+    var f=1; root.style.setProperty('--fit',f);
+    while(clash() && f>0.55){ f=Math.round((f-0.03)*100)/100; root.style.setProperty('--fit',f); }
+  }
+  fit(); addEventListener('resize',fit); if(document.fonts) document.fonts.ready.then(fit);
+})();
+</script>
 </body>
 </html>
