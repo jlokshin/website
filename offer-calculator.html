@@ -241,8 +241,8 @@ function calc(S){
 
 const DEFAULT = () => ({
   g:{years:4, growth:5, dilution:3, haircut:10, discount:8},
-  pub:{base:220000, bonus:30000, signing:25000, rsu:100000},
-  st:{base:190000, bonus:0, signing:0, options:100000, strike:2.5, price:6, valuation:500000000, preset:'growth',
+  pub:{base:250000, bonus:50000, signing:50000, rsu:100000},
+  st:{base:200000, bonus:0, signing:0, options:250000, strike:2.5, price:6, valuation:500000000, preset:'growth',
       scen:PRESETS.growth.map(x=>({...x}))}
 });
 let S = load() || DEFAULT();
@@ -345,10 +345,10 @@ function update(){
   const pubWins = R.pubTotal >= R.stTotal;
   const diff = Math.abs(R.gap);
   const ul = (c,t) => `text-decoration:underline;text-decoration-color:var(${c});text-decoration-thickness:${t}px;text-underline-offset:5px`;
-  const hl = 'background:linear-gradient(transparent 58%, var(--yellow) 58%);padding:0 2px';
+  const chip = (bg,fg) => `background:var(${bg});color:var(${fg});padding:0 .2em;white-space:nowrap;-webkit-box-decoration-break:clone;box-decoration-break:clone`;
   let verdict = diff < 500 ? 'On average, the two offers are worth about the same.'
-    : pubWins ? `On average, the <span style="${ul('--pub',3)}">public company</span> offer is worth <span style="color:var(--pub)">${short(diff)} more per year</span>.`
-              : `On average, the <span style="${ul('--st',5)}">startup</span> offer is worth <span style="${hl}">${short(diff)} more per year</span>.`;
+    : pubWins ? `On average, the <span style="${ul('--pub',4)}">public company</span> offer is worth <span style="${chip('--pub','--cream')}">${short(diff)} more per year</span>.`
+              : `On average, the <span style="${ul('--st',4)}">startup</span> offer is worth <span style="${chip('--st','--ink')}">${short(diff)} more per year</span>.`;
 
   let brk = '';
   const b = R.breakeven;
