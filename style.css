@@ -175,6 +175,7 @@ body.home::after { display: none; }
 .prose a { border-bottom: 3px solid var(--red); }
 .prose a:hover { color: var(--red); }
 
+.prose.intro { margin-bottom: 2rem; }
 .foot { margin-top: 4rem; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.7; }
 
 /* ---------- Small screens ---------- */
@@ -206,4 +207,4 @@ body::after {
 }
 
 /* About: Current / Previously labels */
-.prose .k { display: block; font-family: "League Spartan", "Jost", sans-serif; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--red); margin-bottom: 0.3em; }
+.prose .k { display: block; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--red); margin-bottom: 0.3em; }
