@@ -63,7 +63,7 @@ a { color: inherit; text-decoration: none; }
 
 .menu {
   position: absolute; z-index: 3;
-  left: 4.4cqw; top: 26.6cqw;
+  left: 4.4cqw; top: 21cqw;
   display: flex; flex-direction: column; gap: 0.9cqw;
   list-style: none;
 }
