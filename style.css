@@ -37,11 +37,13 @@ body.home { overflow: hidden; }
 
 /* Bauhaus poster: yellow sun, red disc behind the portrait, blue disc across the chest.
    Everything hangs off the right and bottom edges so the portrait stays anchored. */
-.art .yellow { width: calc(30 * var(--u)); height: calc(30 * var(--u)); border-radius: 50%; background: var(--yellow);
+.stage > .yellow { position: absolute; width: calc(30 * var(--u)); height: calc(30 * var(--u)); border-radius: 50%; background: var(--yellow);
                right: calc(-8 * var(--u)); top: calc(-10 * var(--u)); z-index: 1; }
 .art .red    { width: calc(58 * var(--u)); height: calc(58 * var(--u)); border-radius: 50%; background: var(--red);
                right: 0; top: calc(9 * var(--u)); z-index: 2; }
-.art .me     { width: calc(44 * var(--u)); height: auto; right: calc(8 * var(--u)); bottom: 0; z-index: 3; display: block; }
+.art .me     { width: calc(44 * var(--u)); height: auto; right: calc(8 * var(--u)); bottom: 0; z-index: 3; display: block;
+               -webkit-mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent);
+               mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent); }
 .art .blue   { width: calc(72 * var(--u)); height: calc(72 * var(--u)); border-radius: 50%; background: var(--blue);
                right: calc(12 * var(--u)); bottom: calc(-59 * var(--u)); z-index: 4; }
 
@@ -52,14 +54,6 @@ body.home { overflow: hidden; }
   letter-spacing: 0.03em; text-transform: uppercase;
 }
 .title span { display: block; }
-
-.subnav {
-  position: absolute; z-index: 3;
-  left: calc(4.5 * var(--u)); top: calc(19.6 * var(--u));
-  font-size: calc(1.75 * var(--u)); font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase;
-  white-space: nowrap;
-}
-.subnav i { font-style: normal; margin: 0 calc(0.9 * var(--u)); }
 
 .menu {
   position: absolute; z-index: 3;
@@ -133,29 +127,35 @@ body.home { overflow: hidden; }
 /* ---------- Small screens ---------- */
 
 @media (max-width: 760px) {
-  body.home { display: block; overflow: auto; }
-  .stage { position: relative; inset: auto; width: 100%; height: auto; display: flex; flex-direction: column; overflow: visible; }
-  .stage { --u: 1vw; }
-  .stage .title { order: 1; } .stage .menu { order: 2; } .stage .art { order: 3; } .stage .tagline { order: 4; }
-  .art { position: relative; inset: auto; width: 100%; height: calc(112 * var(--u)); overflow: hidden; margin-top: 2rem; }
-  .art .yellow { width: calc(46 * var(--u)); height: calc(46 * var(--u)); right: calc(-12 * var(--u)); top: calc(-8 * var(--u)); }
-  .art .red    { width: calc(84 * var(--u)); height: calc(84 * var(--u)); right: calc(-1 * var(--u)); top: calc(18 * var(--u)); }
-  .art .me     { width: calc(70 * var(--u)); right: calc(8 * var(--u)); }
-  .art .blue   { width: calc(92 * var(--u)); height: calc(92 * var(--u)); right: calc(4 * var(--u)); bottom: calc(-72 * var(--u)); }
-  .title, .subnav, .menu, .tagline { position: static; }
-  .title { padding: 1.5rem 1.25rem 0; font-size: 16vw; }
-  .subnav { padding: 1.25rem 1.25rem 0; font-size: 0.8rem; white-space: normal; }
-  .subnav i { margin: 0 0.4rem; }
-  .menu { padding: 2rem 1.25rem 0; gap: 1rem; }
-  .menu a { grid-template-columns: 3.5rem 8rem auto; column-gap: 1.25rem; font-size: 1.1rem; }
-  .menu .dot { width: 3.5rem; height: 3.5rem; }
-  .menu .arrow { font-size: 1.6rem; }
-  .tagline { padding: 1.5rem 1.25rem 2.5rem; font-size: 0.7rem; max-width: none; }
   .bar { flex-direction: column; align-items: flex-start; }
   .bar nav { gap: 1rem; }
   .entries a, .entries .row { grid-template-columns: 1rem 1fr; }
   .entries .meta { grid-column: 2; }
   .hero .shapes { display: none; }
+}
+
+/* Portrait screens (phones, tablets held upright): a full-height poster, name on top,
+   menu in the middle, portrait anchored at the bottom. Nothing scrolls. */
+@media (max-aspect-ratio: 1/1), (max-width: 760px) {
+  .stage { --u: min(1vw, calc(100svh / 208)); display: flex; flex-direction: column; }
+  @supports (height: 100dvh) { .stage { --u: min(1vw, calc(100dvh / 208)); } }
+
+  .stage > .yellow { width: calc(36 * var(--u)); height: calc(36 * var(--u)); right: calc(-10 * var(--u)); top: calc(-10 * var(--u)); }
+
+  .title { order: 1; position: relative; flex: none; padding: calc(6 * var(--u)) 0 0 calc(6 * var(--u)); left: auto; top: auto; font-size: calc(15 * var(--u)); line-height: 1.2; }
+
+  .menu { order: 2; position: relative; left: auto; top: auto; flex: 1; justify-content: center; gap: calc(2.6 * var(--u)); padding-left: calc(6 * var(--u)); min-height: calc(39 * var(--u)); }
+  .menu a { grid-template-columns: calc(9 * var(--u)) calc(34 * var(--u)) auto; column-gap: calc(4 * var(--u)); font-size: calc(4.2 * var(--u)); }
+  .menu .dot { width: calc(9 * var(--u)); height: calc(9 * var(--u)); }
+  .menu .arrow { font-size: calc(6 * var(--u)); }
+  .menu a:hover .arrow, .menu a:focus-visible .arrow { transform: translateX(calc(1.2 * var(--u))); }
+
+  .art { order: 4; position: relative; inset: auto; flex: none; width: 100%; height: calc(125 * var(--u)); overflow: hidden; }
+  .art .red  { width: calc(100 * var(--u)); height: calc(100 * var(--u)); right: calc(-2 * var(--u)); top: calc(6 * var(--u)); }
+  .art .me   { width: calc(94 * var(--u)); right: calc(3 * var(--u)); bottom: 0; }
+  .art .blue { width: calc(90 * var(--u)); height: calc(90 * var(--u)); right: calc(-16 * var(--u)); bottom: calc(-61 * var(--u)); }
+
+  .tagline { order: 3; position: relative; left: auto; bottom: auto; flex: none; max-width: none; padding: calc(1 * var(--u)) 0 calc(3 * var(--u)) calc(6 * var(--u)); font-size: calc(2.7 * var(--u)); }
 }
 
 @media (prefers-reduced-motion: reduce) {
