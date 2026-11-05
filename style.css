@@ -66,7 +66,6 @@ body.home::after { display: none; }
 .menu a { display: flex; align-items: center; font-size: max(16px, calc(2.4 * var(--u))); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
 .menu .dot { flex: none; width: max(48px, calc(10 * var(--u))); height: max(48px, calc(10 * var(--u))); border-radius: 50%; margin-right: max(14px, calc(3 * var(--u))); transition: transform .2s ease; }
 .menu .label { width: 8.6em; }
-.sec { font-family: 'League Spartan', 'Jost', sans-serif; font-weight: 800; text-transform: uppercase; font-size: clamp(1.5rem, 3vw, 2rem); margin: 3rem 0 1rem; }
 .menu .arrow { font-size: 1.45em; font-weight: 700; letter-spacing: 0; line-height: 1; transition: transform .2s ease; }
 .menu a:hover .dot, .menu a:focus-visible .dot { transform: scale(1.1); }
 .menu a:hover .arrow, .menu a:focus-visible .arrow { transform: translateX(0.3em); }
