@@ -21,14 +21,15 @@ a { color: inherit; text-decoration: none; }
 /* ---------- Home ---------- */
 
 .stage {
-  container-type: inline-size;
-  position: relative;
-  width: min(100vw, calc(100svh * 1535 / 1024));
-  aspect-ratio: 1535 / 1024;
+  --u: min(1vw, 1.499vh);            /* 1% of the composition width, fitted to the window */
+  position: fixed; inset: 0;
   overflow: hidden;
 }
+@supports (height: 100dvh) {
+  .stage { --u: min(1vw, 1.499dvh); }
+}
 
-body.home { min-height: 100svh; display: grid; place-items: center; overflow: hidden; }
+body.home { overflow: hidden; }
 
 .art { position: absolute; inset: 0; }
 .art > * { position: absolute; }
@@ -47,40 +48,40 @@ body.home { min-height: 100svh; display: grid; place-items: center; overflow: hi
 
 .title {
   position: absolute; z-index: 3;
-  left: 4.5cqw; top: 3cqw;
-  font-size: 6.6cqw; line-height: 1.08; font-weight: 700;
-  letter-spacing: 0.04em; text-transform: uppercase;
+  left: calc(3.6 * var(--u)); top: calc(2.6 * var(--u));
+  font-size: calc(7.7 * var(--u)); line-height: 1.22; font-weight: 700;
+  letter-spacing: 0.03em; text-transform: uppercase;
 }
 .title span { display: block; }
 
 .subnav {
   position: absolute; z-index: 3;
-  left: 4.5cqw; top: 19.6cqw;
-  font-size: 1.75cqw; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase;
+  left: calc(4.5 * var(--u)); top: calc(19.6 * var(--u));
+  font-size: calc(1.75 * var(--u)); font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase;
   white-space: nowrap;
 }
-.subnav i { font-style: normal; margin: 0 0.9cqw; }
+.subnav i { font-style: normal; margin: 0 calc(0.9 * var(--u)); }
 
 .menu {
   position: absolute; z-index: 3;
-  left: 4.5cqw; top: 22cqw;
-  display: flex; flex-direction: column; gap: 0.72cqw;
+  left: calc(3.7 * var(--u)); top: calc(25 * var(--u));
+  display: flex; flex-direction: column; gap: calc(0.72 * var(--u));
   list-style: none;
 }
 .menu a {
-  display: grid; grid-template-columns: 4.24cqw 10.4cqw auto; column-gap: 1.92cqw; align-items: center;
-  font-size: 1.6cqw; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  display: grid; grid-template-columns: calc(4.24 * var(--u)) calc(10.4 * var(--u)) auto; column-gap: calc(1.92 * var(--u)); align-items: center;
+  font-size: calc(1.6 * var(--u)); font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
 }
-.menu .dot { width: 4.24cqw; height: 4.24cqw; border-radius: 50%; transition: transform .2s ease; }
+.menu .dot { width: calc(4.24 * var(--u)); height: calc(4.24 * var(--u)); border-radius: 50%; transition: transform .2s ease; }
 .menu a:hover .dot, .menu a:focus-visible .dot { transform: scale(1.12); }
-.menu .arrow { font-size: 2.4cqw; font-weight: 500; letter-spacing: 0; transition: transform .2s ease; }
-.menu a:hover .arrow, .menu a:focus-visible .arrow { transform: translateX(0.64cqw); }
+.menu .arrow { font-size: calc(2.4 * var(--u)); font-weight: 500; letter-spacing: 0; transition: transform .2s ease; }
+.menu a:hover .arrow, .menu a:focus-visible .arrow { transform: translateX(calc(0.64 * var(--u))); }
 .dot.r { background: var(--red); } .dot.k { background: var(--ink); } .dot.b { background: var(--blue); }
 
 .tagline {
   position: absolute; z-index: 3;
-  left: 4.5cqw; bottom: 3.3cqw; max-width: 12cqw;
-  font-size: 1.2cqw; font-weight: 600; letter-spacing: 0.2em; line-height: 1.55; text-transform: uppercase;
+  left: calc(3.7 * var(--u)); bottom: calc(3.3 * var(--u)); max-width: calc(12 * var(--u));
+  font-size: calc(1.2 * var(--u)); font-weight: 600; letter-spacing: 0.2em; line-height: 1.55; text-transform: uppercase;
 }
 
 /* ---------- Inner pages ---------- */
@@ -134,7 +135,7 @@ body.home { min-height: 100svh; display: grid; place-items: center; overflow: hi
 
 @media (max-width: 760px) {
   body.home { display: block; overflow: auto; }
-  .stage { width: 100%; container-type: normal; aspect-ratio: auto; display: flex; flex-direction: column; overflow: visible; }
+  .stage { position: relative; inset: auto; width: 100%; height: auto; display: flex; flex-direction: column; overflow: visible; }
   .art { position: relative; inset: auto; width: 100%; aspect-ratio: 3 / 2; overflow: hidden; }
   .title, .subnav, .menu, .tagline { position: static; }
   .title { padding: 1.5rem 1.25rem 0; font-size: 17vw; }
