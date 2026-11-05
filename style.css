@@ -98,6 +98,8 @@ body.home::after { display: none; }
   @supports (height: 100dvh) { .stage { --u: calc(100dvh / 133.333); } }
   .poster { width: 100%; }
   .poster .grp { right: calc(-8 * var(--u)); }
+  .contact-cta { font-size: clamp(17px, calc(2.8 * var(--u)), 24px); row-gap: calc(0.7 * var(--u)); column-gap: calc(2.4 * var(--u)); right: calc(5 * var(--u)); bottom: calc(5 * var(--u)); }
+  .contact-cta dt { font-size: 0.72em; }
   .stage {
     --free: calc(100vw - 92 * var(--u));           /* room left of the red circle */
     --tl: max(calc(6 * var(--u)), calc(var(--free) * 0.09));
