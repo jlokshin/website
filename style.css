@@ -160,3 +160,30 @@ body.home { overflow: hidden; }
 .contact { list-style: none; margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 0.75rem 2rem; font-weight: 700; font-size: 0.9rem; letter-spacing: 0.18em; text-transform: uppercase; }
 .contact a { border-bottom: 3px solid var(--red); padding-bottom: 2px; }
 .contact a:hover { color: var(--red); }
+
+/* ---------- Magazine-cover frame and patina (all pages) ---------- */
+
+:root { --b: clamp(10px, min(1.3vw, 2vh), 26px); }
+
+/* aged paper: fine grain, soft stains, warm edge vignette */
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: 40; pointer-events: none;
+  mix-blend-mode: multiply;
+  background:
+    radial-gradient(ellipse at 50% 45%, transparent 52%, rgba(120, 78, 28, 0.20) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='700'%3E%3Cfilter id='s' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.009 0.012' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45  0 0 0 0 0.30  0 0 0 0 0.12  0 0 0 1.9 -1.0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23s)'/%3E%3C/svg%3E") 0 0 / 900px 700px,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='g' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.28  0 0 0 0 0.20  0 0 0 0 0.10  0 0 0 0.75 -0.22'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E") 0 0 / 260px 260px;
+  opacity: 0.5;
+}
+
+/* printed border with a thin keyline where the artwork starts */
+body::after {
+  content: ""; position: fixed; inset: 0; z-index: 41; pointer-events: none;
+  box-sizing: border-box;
+  border: var(--b) solid #f0dabc;
+  box-shadow:
+    inset 0 0 0 1.5px rgba(26, 26, 26, 0.8),
+    inset 0 0 calc(var(--b) * 1.2) rgba(96, 58, 18, 0.28);
+}
+
+@media print { body::before, body::after { display: none; } }
