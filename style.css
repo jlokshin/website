@@ -44,12 +44,8 @@ body.home::after { display: none; }
 .poster::after { content: ""; position: absolute; inset: 0; z-index: 10; pointer-events: none; box-sizing: border-box; border: calc(1.4 * var(--u)) solid #fcecd2; }
 .poster > * { position: absolute; }
 
-.poster .yellow { width: calc(84.7 * var(--u)); height: calc(84.7 * var(--u)); border-radius: 50%; background: var(--yellow); top: calc(-41.5 * var(--u)); right: calc(-42.8 * var(--u)); z-index: 1; }
-.poster .red    { width: calc(144.6 * var(--u)); height: calc(144.6 * var(--u)); border-radius: 50%; background: var(--red); bottom: calc(-47.2 * var(--u)); right: calc(-64.4 * var(--u)); z-index: 2; }
-.poster .me     { width: calc(95.5 * var(--u)); height: auto; bottom: calc(-12.6 * var(--u)); right: calc(-12.5 * var(--u)); z-index: 3; display: block;
-                  -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
-                  mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent); }
-.poster .blue   { width: calc(158.4 * var(--u)); height: calc(158.4 * var(--u)); border-radius: 50%; background: var(--blue); bottom: calc(-129.6 * var(--u)); right: calc(-71.3 * var(--u)); z-index: 4; }
+.poster .art-y { left: 0; top: 0; width: calc(100 * var(--u)); height: auto; z-index: 1; display: block; }
+.poster .art    { left: 0; bottom: 0; width: calc(100 * var(--u)); height: auto; z-index: 2; display: block; }
 
 .title {
   left: calc(5.6 * var(--u)); top: calc(4.6 * var(--u)); z-index: 5;
