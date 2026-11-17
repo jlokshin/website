@@ -2,7 +2,7 @@
 
 Static personal site. No build step.
 
-- `index.html` home, `writing.html` (essays and projects), `about.html`, `404.html`; `projects.html` only redirects to Writing
+- `index.html` home, `blog.html` (essays and projects), `subscribe.html` (email sign-up form that posts to Substack), `about.html`, `404.html`; `writing.html` and `projects.html` only redirect to the blog
 - `style.css` shared styles (colors are CSS variables at the top)
 - `CNAME` tells GitHub Pages the custom domain
-- Edit the placeholder entries in writing.html, commit, and the site redeploys.
+- Edit the entries in blog.html, commit, and the site redeploys.

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Subscribe · Jacob Lokshin</title>
+  <meta name="description" content="Get the latest post from Jacob Lokshin by email.">
+  <link rel="preload" href="fonts/league-spartan-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="canonical" href="https://lokshin.co/subscribe.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Jacob Lokshin">
+  <meta property="og:title" content="Subscribe · Jacob Lokshin">
+  <meta property="og:description" content="Get the latest post from Jacob Lokshin by email.">
+  <meta property="og:url" content="https://lokshin.co/subscribe.html">
+  <meta property="og:image" content="https://lokshin.co/img/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Jacob Lokshin: Bauhaus-style poster with his portrait">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="img/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <link rel="stylesheet" href="style.css?v=32">
+</head>
+<body>
+  <div class="page">
+    <header class="bar">
+      <a class="home" href="/">Jacob Lokshin</a>
+      <nav>
+        <a href="blog.html">Blog</a>
+        <a href="about.html">About</a>
+        <a href="subscribe.html" aria-current="page">Subscribe</a>
+      </nav>
+    </header>
+
+    <h1 class="sr">Subscribe</h1>
+
+    <p class="prose intro">Want the latest post by email? Sign up below. Posts go out through Substack, and you can unsubscribe any time.</p>
+
+    <form class="signup" action="https://loks.substack.com/api/v1/free?nojs=true" method="post">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com">
+      <input type="hidden" name="first_url" value="">
+      <input type="hidden" name="first_referrer" value="">
+      <input type="hidden" name="current_url" value="">
+      <input type="hidden" name="current_referrer" value="">
+      <input type="hidden" name="source" value="subscribe-page">
+      <button type="submit">Subscribe</button>
+    </form>
+
+    <ul class="contact">
+      <li><a href="mailto:jacob@lokshin.co">Email</a></li>
+      <li><a href="https://www.linkedin.com/in/jlokshin/" rel="noopener" target="_blank">LinkedIn</a></li>
+      <li><a href="https://substack.com/@loks" rel="noopener" target="_blank">Substack</a></li>
+    </ul>
+
+    <p class="foot">© Jacob Lokshin</p>
+  </div>
+  <script>
+    (function () {
+      var f = document.querySelector('.signup'); if (!f) return;
+      var set = function (n, v) { var i = f.elements[n]; if (i) i.value = v; };
+      set('first_url', location.href); set('current_url', location.href);
+      set('first_referrer', document.referrer); set('current_referrer', document.referrer);
+    })();
+  </script>
+</body>
+</html>
