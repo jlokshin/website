@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How a steam espresso maker works · Jacob Lokshin</title>
+<meta name="description" content="The hardware and physics powering my 1985 Krups espresso machine">
+<link rel="canonical" href="https://lokshin.co/krups-963.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Jacob Lokshin">
+<meta property="og:title" content="How a steam espresso maker works">
+<meta property="og:description" content="The hardware and physics powering my 1985 Krups espresso machine">
+<meta property="og:url" content="https://lokshin.co/krups-963.html">
+<meta property="og:image" content="https://lokshin.co/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=League+Spartan:wght@800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#f9e7c9; --paper:#fdf3e3; --ink:#1a1a1a; --muted:rgba(26,26,26,.68); --tan:#c9bca8;
+  --red:#d83616; --blue:#235071; --yellow:#f9a904;
+  --label:#5d5344; --leader:#c9bca8; --accent:#e09a00;
+  --head:"League Spartan","Jost",system-ui,sans-serif; --body:"Jost","Futura","Century Gothic",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--cream)}
+body{color:var(--ink);font:500 17px/1.6 var(--body)}
+main{max-width:62rem;margin:0 auto;padding:1.5rem 1.5rem 5rem}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding-bottom:1.25rem;border-bottom:4px solid var(--ink);margin-bottom:2.5rem}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.bar .home{font:800 1.45rem var(--head);letter-spacing:.01em;text-transform:uppercase;color:var(--ink);text-decoration:none}
+.bar nav{display:flex;gap:1.5rem;font-weight:600;font-size:.85rem;letter-spacing:.2em;text-transform:uppercase}
+.bar nav a{color:var(--ink);text-decoration:none;padding-bottom:2px;border-bottom:3px solid transparent}
+.bar nav a:hover,.bar nav a[aria-current]{border-color:var(--red)}
+@media (max-width:760px){.bar{flex-direction:column;align-items:flex-start}.bar nav{gap:1rem}}
+.kicker{font:700 12px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+h1{font:800 clamp(2rem,5vw,3.1rem)/1.02 var(--head);letter-spacing:-.01em;margin:0 0 .5rem;max-width:40ch;text-wrap:balance}
+.deck{font-size:1.2rem;line-height:1.6;margin:0 0 2rem;max-width:48rem}
+h2{font:800 26px/1.15 var(--head);letter-spacing:-.01em;margin:48px 0 10px}
+p{margin:0 0 16px;max-width:64ch}
+.fig{background:var(--paper);border:2px solid var(--ink);padding:1.25rem;margin:24px 0 8px;max-width:48rem}
+.fig svg{display:block;width:100%;height:auto}
+.figtitle{font:800 20px/1.2 var(--head);margin:4px 0 2px}
+.eqline{white-space:nowrap}@media (min-width:761px){.oneline{white-space:nowrap}}@media (max-width:760px){.eqline{white-space:normal}}
+.figsub{font-size:14px;color:var(--muted);margin:0 0 8px}
+
+button{font:700 .72rem var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--ink);background:transparent;border:2px solid var(--ink);border-radius:999px;padding:8px 15px;cursor:pointer}
+button:hover{background:var(--yellow)}
+button[aria-pressed="true"]{background:var(--ink);color:var(--cream)}
+.steps button{display:flex;gap:8px;align-items:center}
+.steps button i{font:800 13px var(--head);font-style:normal;background:var(--yellow);color:var(--ink);width:22px;height:22px;display:grid;place-items:center;border:2px solid var(--ink)}
+.steps button[aria-pressed="true"] i{background:var(--red);color:#fff;border-color:var(--paper)}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.cap{border-top:2px solid var(--ink);margin-top:12px;padding-top:12px;min-height:5.6em}
+.cap b{font:800 18px var(--head)}
+.legend{list-style:none;margin:16px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:6px 20px;font-size:15px;line-height:1.35}
+.legend li{display:flex;gap:10px;align-items:flex-start}
+.legend em{font-style:normal;font:700 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin-left:6px}
+.pinn{flex:none;width:22px;height:22px;border-radius:50%;background:var(--yellow);border:2px solid var(--ink);display:grid;place-items:center;font:800 12px var(--head)}
+.pinn.inf{background:var(--paper);border-style:dashed}
+.note{font-size:14px;color:var(--muted);max-width:none;margin:8px 0 0}
+.note b{color:var(--ink)}
+.ded{border-left:6px solid var(--red);padding:2px 0 2px 16px;font-size:18px;max-width:52ch;margin:-8px 0 8px}
+.dedrow{display:flex;gap:32px;align-items:center;flex-wrap:wrap;margin:8px 0 40px}
+.dedrow .ded{flex:1 1 220px;margin:0;font-size:20px;line-height:1.45}
+.taped{position:relative;flex:0 0 373px;max-width:100%;margin:12px auto 12px;transform:rotate(2deg);background:#fffdf8;padding:10px;box-shadow:0 2px 8px rgba(29,27,24,.28)}
+.taped img{display:block;width:100%;height:auto;filter:sepia(.12)}
+.taped figcaption{font:500 13px var(--body);color:var(--muted);text-align:center;padding-top:6px}
+.tape{position:absolute;width:62px;height:20px;background:rgba(236,214,150,.82);box-shadow:0 1px 2px rgba(29,27,24,.2);border-left:2px dotted rgba(29,27,24,.12);border-right:2px dotted rgba(29,27,24,.12)}
+.tape.tl{top:-6px;left:-12px;transform:rotate(-38deg)}
+.tape.tr{top:-6px;right:-12px;transform:rotate(38deg)}
+.tape.bl{bottom:-6px;left:-12px;transform:rotate(38deg)}
+.tape.br{bottom:-6px;right:-12px;transform:rotate(-38deg)}
+.aside{display:flow-root;max-width:48rem}.aside p{max-width:none}
+.pair{float:right;margin:4px 0 12px 20px;padding:0}.aside .tbl{width:min(100%,540px);font-size:14px}.aside .tbl th,.aside .tbl td{padding-right:10px}.pair .pp{display:flex;gap:6px}.pair img{height:116px;width:auto;border:2px solid var(--ink);display:block}.pair figcaption{text-align:center;font-size:17px;color:var(--muted);margin-top:8px}
+.photo{margin:24px 0;padding:0;max-width:40rem}
+.photo img{display:block;width:100%;height:auto;border:2px solid var(--ink);background:var(--paper)}
+.photo figcaption{font-size:14px;color:var(--muted);margin-top:8px}
+.ph{aspect-ratio:16/9;border:2px dashed var(--ink);background:var(--paper);display:grid;place-items:center;font:700 14px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.rng{display:flex;gap:14px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.rng input{flex:1 1 220px;accent-color:var(--red);height:28px}
+.rng output{font:800 18px var(--head);min-width:9ch}
+.work{border-left:6px solid var(--yellow);background:var(--paper);padding:8px 16px;margin:12px 0 18px;font:600 17px/1.9 var(--body);max-width:48rem}
+.eq{font:800 22px var(--head);text-align:center;margin:10px 0 2px}
+.read{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px 16px;margin-top:10px;border-top:2px solid var(--ink);padding-top:10px;font-size:15px}
+.read b{display:block;font:800 22px var(--head)}
+.tbl{width:100%;border-collapse:collapse;font-size:15px;margin:8px 0 0;max-width:64ch}
+.tbl th,.tbl td{border-bottom:1px solid var(--tan);padding:4px 8px;text-align:left}
+.tbl th{font:700 12px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.box{border:2px solid var(--ink);background:var(--paper);padding:14px 18px;margin:20px 0;max-width:48rem}
+.box b{font:800 18px var(--head)}
+.box p{margin:6px 0 0}
+.src{max-width:48rem;font-size:14px;color:var(--muted);border-top:2px solid var(--ink);margin-top:32px;padding-top:12px}
+.src a{color:var(--ink)}
+.src .wm{float:right;font:700 10px var(--body);letter-spacing:.12em;text-transform:uppercase}
+svg text{font-family:var(--body)}
+#cut .ct{font:600 21px var(--body);fill:#5d5344}
+#cut .cl{fill:none;stroke:#a89b86;stroke-width:1.5;stroke-linecap:round}
+/* exploded-view rules */
+svg .lbl { font: 400 24px var(--mono); fill: var(--label); transition: opacity .5s, fill .2s; }
+svg .ldr { fill: none; stroke: var(--leader); stroke-width: 1.6; stroke-linecap: round; transition: opacity .5s, stroke .2s; }
+svg .part { transition: transform .95s cubic-bezier(.3, .8, .3, 1); }
+svg.open .part { transform: translate(var(--dx), var(--dy)); }
+svg .tag { transition: opacity .45s; }
+svg:not(.open) .tag { opacity: 0; pointer-events: none; }
+svg .on-open { transition: opacity .5s; opacity: 0; }
+svg.open .on-open { opacity: 1; }
+svg .hl-lbl { fill: var(--ink); }
+svg .hl-ldr { stroke: #8d95a1; }
+svg .hl-part .o { stroke: #2c3140; }
+.o { stroke: #4c5163; stroke-width: 1.3; stroke-linejoin: round; stroke-linecap: round; transition: stroke .2s; }
+.oc { stroke: #7a8393; stroke-width: 1.2; stroke-linejoin: round; stroke-linecap: round; }
+.hi { fill: #fff; opacity: .3; }
+.hl2 { stroke: #fff; stroke-opacity: .3; stroke-width: 1; fill: none; }
+
+svg .lbl{font:600 26px var(--body);fill:var(--label)}
+svg .hl-lbl{fill:var(--ink)}
+/* cutaway */
+#cut [data-on]{opacity:0;transition:opacity .6s}
+#cut #wl{transition:y .9s ease,height .9s ease}
+#cut #knobg{transition:transform .8s;transform-origin:100px 175px}
+#cut.s5 #knobg{transform:rotate(-300deg)}
+@keyframes dash{to{stroke-dashoffset:-28}}
+.flow{stroke-dasharray:6 8;animation:dash 1s linear infinite}
+.pin circle{fill:var(--yellow);stroke:var(--ink);stroke-width:2}
+.pin.inf circle{fill:var(--paper);stroke-dasharray:3 2.5}
+.pin text{font:800 13px var(--head);fill:var(--ink);text-anchor:middle}
+.pl{stroke:var(--ink);stroke-width:1.1;stroke-opacity:.45;fill:none}
+.dash{stroke-dasharray:5 4}
+@media (prefers-reduced-motion:reduce){.flow{animation:none}#cut [data-on],#cut #wl,#cut #knobg{transition:none}}
+</style>
+</head>
+<body>
+<main>
+<header class="bar"><a class="home" href="https://lokshin.co">Jacob Lokshin</a><nav><a href="https://lokshin.co/blog" aria-current="page">Blog</a><a href="https://lokshin.co/about">About</a><a href="https://lokshin.co/subscribe">Subscribe ↗</a></nav></header>
+
+<h1>How a steam espresso maker works</h1>
+<p class="deck">The hardware and physics powering my 1985 Krups espresso machine</p>
+
+<div class="dedrow">
+<p class="ded">For my grandfather, Norman Fuchs, a brilliant physicist—and even better grandfather. He used this little espresso maker every morning for 40 years; I’ve used it for two.<span style="display:block;height:10px"></span>He would not like that I’ve simplified some of the math throughout this post. And he would definitely groan at the Pedro Pascal meme.</p>
+<figure class="taped"><img src="img/krups-963/norman.jpg" alt="Norman Fuchs in March 1967, seated and looking down, a pipe in his mouth" width="1400" height="930"><i class="tape tl"></i><i class="tape tr"></i><i class="tape bl"></i><i class="tape br"></i></figure>
+</div>
+
+<h2>Krups Espresso Mini 963, pulled apart (side view)</h2>
+<div class="fig">
+  <svg id="boom" viewBox="0 210 960 490" role="img" aria-labelledby="bt bd">
+  <title id="bt">Exploded view of the Krups Espresso Mini 963</title>
+  <desc id="bd">Side view of a steam espresso maker pulled apart into eleven labeled parts: boiler cap, housing, steam knob, steam nozzle, steam build-up plug, filter holder, filter basket, drip tray and on/off switch (a red button on the right edge of the drip tray).</desc>
+  <defs>
+    <linearGradient id="gSlate" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#868da3"/><stop offset="1" stop-color="#585d70"/></linearGradient>
+    <linearGradient id="gSlateH" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#7f869c"/><stop offset=".6" stop-color="#666b7f"/><stop offset="1" stop-color="#4e5265"/></linearGradient>
+    <linearGradient id="gKnob" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#5f6578"/><stop offset="1" stop-color="#3a3e4e"/></linearGradient>
+    <linearGradient id="gChrome" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#f1f3f6"/><stop offset=".5" stop-color="#cfd5dc"/><stop offset="1" stop-color="#9ea7b2"/></linearGradient>
+    <linearGradient id="gAlu" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#eceff2"/><stop offset=".55" stop-color="#c2c9d1"/><stop offset="1" stop-color="#99a2ad"/></linearGradient>
+    <linearGradient id="gGold" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#f5cf8c"/><stop offset="1" stop-color="#d89a38"/></linearGradient>
+    <linearGradient id="gBrown" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#9a8068"/><stop offset="1" stop-color="#5f493b"/></linearGradient>
+  </defs>
+
+  <g class="part" id="p-tray" data-part="tray" style="--dx:0px;--dy:0px">
+    <rect class="o" fill="url(#gChrome)" x="474" y="646" width="164" height="6" rx="2"/>
+    <path d="M486 649 h6 M502 649 h6 M518 649 h6 M534 649 h6 M550 649 h6 M566 649 h6 M582 649 h6 M598 649 h6 M614 649 h6" stroke="#7a8393" stroke-width="2" stroke-linecap="round"/>
+    <path class="o" fill="url(#gSlate)" d="M468 652 H636 Q644 652 644 660 V669 Q644 677 636 677 H468 Z"/>
+    <path class="hl2" d="M470 658 H640"/>
+    <rect class="hi" x="470" y="654" width="168" height="3" rx="1.5"/>
+  </g>
+
+  <g class="part" id="p-switch" data-part="switch" style="--dx:72px;--dy:0px">
+    <rect class="o" fill="#d83616" x="642" y="656" width="12" height="15" rx="4"/>
+    <rect x="644.5" y="659" width="3" height="8" rx="1.5" fill="#fff" opacity=".45"/>
+  </g>
+
+
+  <g class="part" id="p-basket" data-part="basket" style="--dx:0px;--dy:70px">
+    <path class="o" fill="url(#gChrome)" d="M526 426 H599 L594 448 H531 Z"/>
+    <path class="hl2" d="M528 430 H597"/>
+    <path d="M540 443 h0 M552 443 h0 M564 443 h0 M576 443 h0 M588 443 h0" stroke="#7a8393" stroke-width="3.6" stroke-linecap="round"/>
+  </g>
+
+  <g class="part" id="p-holder" data-part="holder" style="--dx:0px;--dy:150px">
+    <path class="o" fill="#4b5062" d="M607 427 L650 435 V449 L607 441 Z"/>
+    <ellipse class="o" fill="#5f6578" cx="650" cy="442" rx="3.6" ry="7"/>
+    <path class="hi" d="M609 429 L646 436 V438 L609 431 Z"/>
+    <path class="o" fill="url(#gAlu)" d="M518 420 H607 V442 Q607 454 595 454 H530 Q518 454 518 442 Z"/>
+    <path class="hl2" d="M520 425 H605"/>
+    <rect class="hi" x="522" y="428" width="8" height="22" rx="4"/>
+    <rect class="o" fill="url(#gGold)" x="556" y="454" width="12" height="10" rx="2"/>
+  </g>
+
+  <g class="part" id="p-gasket" data-part="gasket" style="--dx:0px;--dy:40px">
+    <rect class="o" fill="#ecdcb0" stroke="#b59a5a" x="500" y="412" width="112" height="8" rx="3"/>
+    <path class="hl2" d="M504 415 H608"/>
+  </g>
+
+  <g class="part" id="p-housing" data-part="housing" style="--dx:0px;--dy:0px">
+    <path class="o" fill="url(#gSlate)" d="M308 330 H587 Q615 330 615 358 V390 Q615 412 596 412 H474 V669 Q474 677 466 677 H308 Q300 677 300 669 V338 Q300 330 308 330 Z"/>
+    <rect x="440" y="334" width="34" height="336" fill="#000" opacity=".12"/>
+    <rect class="hi" x="304" y="338" width="5" height="326" rx="2.5"/>
+    <rect class="hi" x="480" y="333" width="122" height="4" rx="2"/>
+    <path d="M300 421 H474" stroke="#3f4455" stroke-width="1.3"/>
+    <path class="hl2" d="M300 424 H474"/>
+    <circle cx="375" cy="370" r="38" fill="#fff" fill-opacity=".07" stroke="#4c5163" stroke-opacity=".6" stroke-width="1"/>
+    
+    <rect x="344" y="326" width="106" height="7" rx="2" fill="#434858" opacity=".7"/>
+    <path d="M588 346 Q606 346 606 362" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="1.2"/>
+  </g>
+
+  <g class="part" id="p-cap" data-part="cap" style="--dx:0px;--dy:-55px">
+    <path class="o" fill="url(#gSlate)" d="M350 302 V290 Q350 282 358 282 H437 Q445 282 445 290 V302 Z"/>
+    <ellipse class="o" fill="url(#gChrome)" cx="397" cy="283" rx="47" ry="3.6"/>
+    <rect class="o" fill="url(#gSlateH)" x="340" y="302" width="115" height="29" rx="4"/>
+    <path stroke="#fff" stroke-opacity=".28" stroke-width="1.2" d="M346 305 V328 M352 305 V328 M358 305 V328 M364 305 V328 M370 305 V328 M376 305 V328 M382 305 V328 M388 305 V328 M394 305 V328 M400 305 V328 M406 305 V328 M412 305 V328 M418 305 V328 M424 305 V328 M430 305 V328 M436 305 V328 M442 305 V328 M448 305 V328"/>
+    <rect class="hi" x="354" y="286" width="7" height="13" rx="3"/>
+  </g>
+
+  <g class="part" id="p-pipe" data-part="pipe" style="--dx:-272px;--dy:80px">
+    <path d="M406 369 H474 Q498 369 502 398 L518 486" fill="none" stroke="#7a8393" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M406 369 H474 Q498 369 502 398 L518 486" fill="none" stroke="#dfe4ea" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M406 369 H474 Q498 369 502 398 L518 486" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" transform="translate(-1.5 -1.6)"/>
+    <path class="o" fill="url(#gBrown)" d="M498 486 H540 L546 528 H520 Z"/>
+    <ellipse class="o" fill="#3e2f27" cx="519" cy="486" rx="21" ry="3.4"/>
+    <path class="hl2" d="M504 496 L508 524"/>
+    <path d="M512 492 H534 M514 502 H538" stroke="#3e2f27" stroke-opacity=".5" stroke-width="1.2"/>
+  </g>
+
+  <g class="part" id="p-knob" data-part="knob" style="--dx:-145px;--dy:0px">
+    <circle cx="375" cy="370" r="34.5" fill="none" stroke="#4c5163" stroke-width="5" stroke-dasharray="3.2 2.6"/>
+    <circle class="o" fill="url(#gKnob)" cx="375" cy="370" r="31"/>
+    <circle cx="375" cy="370" r="22" fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="1"/>
+    <path d="M358 356 A22 22 0 0 1 380 349" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2.4" stroke-linecap="round"/>
+  </g>
+
+
+  <g class="tag" id="tags">
+    <path class="ldr" data-part="cap" d="M718 251 H500 C486 251 474 261 457 261"/>
+    <text class="lbl" data-part="cap" x="732" y="259">Boiler cap</text>
+    <path class="ldr" data-part="housing" d="M761 358 H640 C628 358 624 372 612 372"/>
+    <text class="lbl" data-part="housing" x="775" y="366">Housing</text>
+    <path class="ldr" data-part="gasket" d="M675 452 H640 C628 452 624 466 612 466"/>
+    <text class="lbl" data-part="gasket" x="689" y="460">Steam build-up plug</text>
+    <path class="ldr" data-part="holder" d="M675 584 H668 C660 584 658 598 650 598"/>
+    <path class="ldr" data-part="switch" d="M742 664 H728"/>
+    <text class="lbl" data-part="switch" x="750" y="672">On/off switch</text>
+    <text class="lbl" data-part="holder" x="689" y="592">Filter holder</text>
+    <path class="ldr" data-part="basket" d="M675 510 H640 C628 510 614 523 601 523"/>
+    <text class="lbl" data-part="basket" x="689" y="518">Filter basket</text>
+
+    <path class="ldr" data-part="knob" d="M174 356 C186 356 188 370 200 370"/>
+    <text class="lbl" data-part="knob" x="16" y="364">Steam knob</text>
+    <path class="ldr" data-part="pipe" d="M170 506 H206 C216 506 220 520 236 520"/>
+    <text class="lbl" data-part="pipe" x="16" y="514">Steam nozzle</text>
+  </g>
+</svg>
+  <div class="ctl"><button id="toggle" type="button" aria-pressed="false">Pull it apart</button></div>
+</div>
+
+<h2>How it works</h2>
+<p>Step through a brew to see what each part does.</p>
+<div class="fig">
+  <svg id="cut" viewBox="0 0 900 610" role="img" aria-labelledby="ct cd">
+  <title id="ct">Cutaway of the Krups 963 brewing</title>
+  <desc id="cd">Side view with the housing see-through. A sealed boiler holds water over a base heater. A tube from near the bottom of the boiler runs up and across the arm to the brew head, above the filter holder and a cup. A steam knob and steam nozzle sit on the left.</desc>
+  <!-- interior -->
+  <rect class="oc" x="232" y="82" width="56" height="32" fill="#e8edf2"/>
+  <rect class="oc" x="170" y="110" width="180" height="410" rx="12" fill="#e8edf2"/>
+  <rect x="172" y="112" width="176" height="158" fill="#fff" opacity=".55"/>
+  <rect id="wl" x="172" y="270" width="176" height="248" fill="#2768a8" opacity=".5"/>
+  <g data-on="2 3 4 5" fill="#fff" stroke="#8a93a2" stroke-width="1">
+    <circle cx="196" cy="140" r="5"/><circle cx="230" cy="168" r="7"/><circle cx="262" cy="132" r="4"/><circle cx="292" cy="170" r="6"/><circle cx="214" cy="214" r="5"/><circle cx="268" cy="224" r="7"/><circle cx="318" cy="132" r="4"/><circle cx="318" cy="222" r="5"/>
+  </g>
+  <g data-on="2 3 4" fill="none" stroke="#d83616" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M200 236 v-20 m-6 14 l6 6 l6 -6"/><path d="M246 246 v-20 m-6 14 l6 6 l6 -6"/><path d="M296 246 v-20 m-6 14 l6 6 l6 -6"/>
+  </g>
+  <g data-on="1" fill="none" stroke="#2768a8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M260 14 V48 m-8 -9 l8 9 l8 -9"/></g>
+  <!-- heater -->
+  <rect x="172" y="524" width="176" height="26" fill="#d9dde3" stroke="#4c5163" stroke-width="1.2"/>
+  <rect data-on="2 3 4 5" x="172" y="524" width="176" height="26" fill="#d83616" fill-opacity=".38"/>
+  <path d="M184 546 l10 -18 l10 18 l10 -18 l10 18 l10 -18 l10 18 l10 -18 l10 18 l10 -18 l10 18 l10 -18 l10 18 l10 -18 l10 18" fill="none" stroke="#d83616" stroke-width="3.2" stroke-linejoin="round"/>
+  <!-- riser -->
+  <path d="M334 520 V104 H500 V164" fill="none" stroke="#7a8393" stroke-width="11" stroke-linejoin="round" stroke-dasharray="1 0"/>
+  <path d="M334 520 V104 H500 V164" fill="none" stroke="#e4e8ed" stroke-width="7" stroke-linejoin="round"/>
+  <path data-on="3 4" class="flow" d="M334 516 V104 H500 V162" fill="none" stroke="#2768a8" stroke-width="4" stroke-linejoin="round"/>
+  <!-- brew head -->
+  <rect class="o" x="440" y="160" width="120" height="48" fill="url(#gSlate)"/>
+  <rect x="470" y="164" width="60" height="42" fill="#e8edf2" stroke="#4c5163" stroke-width="1"/>
+  <rect data-on="4" x="471" y="176" width="58" height="29" fill="#2768a8" opacity=".5"/>
+  <rect class="o" x="436" y="206" width="128" height="8" rx="2" fill="#ecdcb0" stroke="#b59a5a"/>
+  <path class="o" fill="url(#gAlu)" d="M446 214 H554 V240 Q554 248 546 248 H454 Q446 248 446 240 Z"/>
+  <path class="o" fill="url(#gChrome)" d="M458 214 H542 L538 240 H462 Z"/>
+  <rect x="462" y="216" width="76" height="20" fill="#6b4a35"/>
+  <rect class="o" x="494" y="248" width="12" height="14" fill="url(#gAlu)"/>
+  <path class="o" fill="#4b5062" d="M554 224 L650 232 V246 L554 238 Z"/>
+  <path data-on="4" class="flow" d="M500 262 V408" fill="none" stroke="#6b4a35" stroke-width="3.5"/>
+  <!-- cup, grid, tray -->
+  <path class="o" fill="#fdf3e3" d="M462 410 H538 L532 468 Q530 472 526 472 H474 Q470 472 468 468 Z"/>
+  <rect data-on="4 5" x="466" y="438" width="68" height="31" fill="#6b4a35" opacity=".85"/>
+  <rect class="o" x="430" y="472" width="140" height="6" rx="2" fill="url(#gChrome)"/>
+  <rect class="o" x="420" y="480" width="160" height="16" fill="url(#gSlate)"/>
+  <!-- steam valve, knob, nozzle -->
+  <rect class="o" x="122" y="170" width="52" height="10" fill="url(#gChrome)"/>
+  <path class="o" d="M172 165 L186 175 L172 185 Z" fill="url(#gGold)"/>
+  <path d="M142 182 V300 L128 336" fill="none" stroke="#7a8393" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M142 182 V300 L128 336" fill="none" stroke="#e4e8ed" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="o" fill="url(#gBrown)" d="M110 332 H146 L150 392 H106 Z"/>
+  <path data-on="5" class="flow" d="M170 175 H142 V300 L128 336 V392" fill="none" stroke="#d83616" stroke-width="3.2" stroke-linejoin="round"/>
+  <g data-on="5" fill="#fff" stroke="#8a93a2" stroke-width="1"><circle cx="118" cy="402" r="5"/><circle cx="132" cy="410" r="6"/><circle cx="146" cy="400" r="4"/><circle cx="126" cy="422" r="5"/><circle cx="142" cy="424" r="4"/></g>
+  <g id="knobg"><circle class="o" cx="100" cy="175" r="24" fill="url(#gKnob)"/><circle cx="100" cy="175" r="29" fill="none" stroke="#4c5163" stroke-width="4" stroke-dasharray="3 2.4"/><path d="M100 153 V166" stroke="#fff" stroke-opacity=".75" stroke-width="3" stroke-linecap="round"/></g>
+  <!-- housing, see-through -->
+  <path fill="url(#gSlate)" fill-opacity=".2" stroke="#4c5163" stroke-width="1.5" stroke-linejoin="round" d="M158 70 H592 Q600 70 600 78 V152 Q600 160 592 160 H370 V500 H592 Q600 500 600 508 V552 Q600 560 592 560 H158 Q150 560 150 552 V78 Q150 70 158 70 Z"/>
+  <path d="M156 80 V548" stroke="#fff" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/>
+  <!-- cap on top -->
+  <rect class="o" x="222" y="58" width="76" height="24" rx="3" fill="url(#gSlateH)"/>
+  <path d="M230 62 V78 M238 62 V78 M246 62 V78 M254 62 V78 M262 62 V78 M270 62 V78 M278 62 V78 M286 62 V78" stroke="#fff" stroke-opacity=".28" stroke-width="1.2"/>
+  <rect x="230" y="82" width="60" height="5" fill="#2c3140"/>
+  <!-- callouts -->
+  <g data-on="1"><path class="cl" d="M326 31 C312 31 304 52 298 64"/><text class="ct" x="330" y="36">Boiler cap</text></g>
+  <g data-on="1 2 3"><path class="cl" d="M70 470 H140 C158 470 160 420 174 410"/><text class="ct" x="14" y="476">Boiler</text></g>
+  <g data-on="2"><path class="cl" d="M186 570 C192 570 194 552 196 542"/><text class="ct" x="14" y="576">Heating element</text></g>
+  <g data-on="2 5"><path class="cl" d="M96 114 C100 126 100 136 100 146"/><text class="ct" x="14" y="108">Steam knob</text></g>
+  <g data-on="3"><path class="cl" d="M470 42 C470 70 440 96 420 101"/><text class="ct" x="430" y="36">Riser tube</text></g>
+  <g data-on="4"><path class="cl" d="M668 196 H580 C570 196 566 206 562 211"/><text class="ct" x="672" y="200">Steam build-up plug</text></g>
+  <g data-on="4"><path class="cl" d="M668 256 H575 C556 256 548 246 540 238"/><text class="ct" x="672" y="262">Filter basket</text></g>
+  <g data-on="4"><path class="cl" d="M668 294 H540 C530 294 524 268 520 249"/><text class="ct" x="672" y="300">Filter holder</text></g>
+  <g data-on="5"><path class="cl" d="M100 430 C112 420 118 408 124 394"/><text class="ct" x="14" y="436">Steam nozzle</text></g>
+</svg>
+
+  <div class="ctl steps" id="steps" role="group" aria-label="Brew steps">
+    <button type="button" data-s="1" aria-pressed="true"><i>1</i>Fill</button>
+    <button type="button" data-s="2" aria-pressed="false"><i>2</i>Heat</button>
+    <button type="button" data-s="3" aria-pressed="false"><i>3</i>Push</button>
+    <button type="button" data-s="4" aria-pressed="false"><i>4</i>Brew</button>
+    <button type="button" data-s="5" aria-pressed="false"><i>5</i>Froth</button>
+  </div>
+  <div class="cap" id="cap" aria-live="polite"></div>
+</div>
+
+<h2>Espresso is defined by pressure</h2>
+<p><i>Espresso</i> and <i>pressure</i> share the Latin root <i>pressus</i>, meaning “pressed.” This is fortunate, because my grandfather thoroughly enjoyed both coffee and Latin.</p>
+<p>Water, heated, becomes steam. Steam takes up more space than the water it came from. As steam builds up, trapped, it begins pressing harder and harder against the water below. Pressure builds (<b>P</b>).</p>
+<p>But wait, there's an escape hatch! The riser tube opens to the room's air, with pressure <b>P₀</b> (P &gt; P₀). Seizing its opportunity to escape the relentless steam pressure, water begins shawshanking its way up and out the riser tube.</p>
+<p>Once steam pressure exceeds the weight of the water going up the tube, hot water is propelled out, through your coffee grounds, to delicious, caffeinated freedom.</p>
+<div class="aside"><figure class="pair"><div class="pp"><img src="img/krups-963/blaise.jpg" alt="Painted portrait of Blaise Pascal"><img src="img/krups-963/pedro.jpg" alt="Photo of Pedro Pascal"></div><figcaption>2 Pa</figcaption></figure>
+<p><b>A little physics:</b> pressure is measured in pascals (Pa). Regular Palo Alto air is ~101 kPa, roughly 1 "bar." Fancy espresso machines are "9&nbsp;bar," meaning the incremental pressure they produce is ~9x regular air. My humble Krups maxes out around 3&nbsp;bar, which is fine by me—I'm a 3&nbsp;bar kind of guy. Here’s a standard steam table, for reference:</p>
+<table class="tbl"><tr><th>Boiler temperature</th><th>Steam pressure (absolute)</th><th>Extra push beyond room air</th></tr>
+<tr><td>100 °C</td><td>101 kPa (1.01 bar)</td><td>0 kPa (0 bar)</td></tr>
+<tr><td>110 °C</td><td>143 kPa (1.43 bar)</td><td>about 42 kPa (0.42 bar)</td></tr>
+<tr><td>120 °C</td><td>199 kPa (1.99 bar)</td><td>about 98 kPa (0.98 bar)</td></tr></table></div>
+<p style="margin-top:16px">Drag the slider below to see how steam pressure lifts water.</p>
+<div class="fig">
+  <svg id="phys" viewBox="0 0 720 400" role="img" aria-labelledby="pt pd">
+    <title id="pt">Pressure balance in the riser tube</title>
+    <desc id="pd">A sealed boiler with steam above water. Red arrows press down on the water surface. A tube from the bottom of the boiler rises and bends over to an open outlet. The water level in the tube rises as the pressure goes up.</desc>
+    <rect class="oc" x="40" y="80" width="260" height="290" rx="14" fill="#e8edf2"/>
+    <rect x="42" y="82" width="256" height="138" fill="#fff" opacity=".55"/>
+    <rect x="42" y="220" width="256" height="148" fill="#2768a8" opacity=".5"/>
+    <g fill="#fff" stroke="#8a93a2" stroke-width="1"><circle cx="70" cy="110" r="5"/><circle cx="130" cy="130" r="7"/><circle cx="205" cy="104" r="4"/><circle cx="170" cy="168" r="6"/><circle cx="262" cy="150" r="5"/></g>
+    <g id="arrows" fill="none" stroke="#d83616" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></g>
+    <text x="60" y="400" style="display:none"></text>
+    <path d="M258 366 V40 H400 V104" fill="none" stroke="#7a8393" stroke-width="16" stroke-linejoin="round"/>
+    <path d="M258 366 V40 H400 V104" fill="none" stroke="#e4e8ed" stroke-width="11" stroke-linejoin="round"/>
+    <rect id="col" x="253" y="220" width="10" height="146" fill="#2768a8" opacity=".85"/>
+    <g id="over" style="opacity:0;transition:opacity .4s"><path d="M258 40 H400 V104" fill="none" stroke="#2768a8" stroke-width="7" stroke-linejoin="round" class="flow"/><path d="M400 112 V150" stroke="#6b4a35" stroke-width="3.5" class="flow" fill="none"/></g>
+    <path d="M388 104 H412 L408 118 H392 Z" fill="url(#gAlu)" class="o"/>
+    <!-- gauge -->
+    <path d="M290 220 H330 M290 40 H330" class="pl dash"/>
+    <path id="hline" d="M322 220 V220" stroke="#e09a00" stroke-width="5" stroke-linecap="round"/>
+    <g class="pin"><circle cx="322" cy="40" r="0" /></g>
+    <text x="424" y="46" font-size="16" font-weight="600" fill="#5d5344">brew head, 10 cm up</text>
+    <text id="hlab" x="336" y="200" font-size="22" font-weight="800" fill="#1d1b18"></text>
+    <text x="336" y="224" font-size="16" font-weight="600" fill="#5d5344">water surface</text>
+    <text x="40" y="392" font-size="16" font-weight="600" fill="#5d5344">sealed boiler, steam pressure P</text>
+    <text x="428" y="96" font-size="16" font-weight="600" fill="#5d5344">open to the room, pressure P₀</text>
+  </svg>
+  <div class="rng"><label for="pr" style="font-weight:700">Steam pressure above the room</label><input id="pr" type="range" min="0" max="200" step="0.5" value="0"><output id="pv" for="pr"></output></div>
+  </div>
+<p>It takes ~1 kPa to push the water up the pipe. All the remaining pressure is used to press the water through the packed coffee grounds. The finer the grind, the more pressure it takes to get through them (which is why drip coffee uses a coarser grind).</p>
+
+<h2>A coil of wire heats the water</h2>
+<p>I remember sitting at the kitchen table on the phone with my grandfather, asking him to explain electricity to me. Given he was plucked from Staten Island obscurity at 16 as a winner of the “super bowl of science,” Westinghouse Electric’s talent search, and given a full ride to study physics at Carnegie Mellon — he seemed sufficiently qualified.</p>
+<p>Quick vocab: <b>Voltage</b> (V) is how hard your wall outlet pushes electric charge. <b>Current</b> (I, from the French <i>intensité de courant</i>, duh) is how much charge flows per second, measured in amps. <b>Resistance</b> (R) is how much the wire fights that current.</p>
+<p>A thin wire coil provides the resistance. As charge squeezes through the wire, it shakes the metal’s atoms. That shaking is heat.</p>
+<p><b>Power</b> (P again) measures how fast the charged coil generates that heat. My mighty Krups provides 800 watts of power, when plugged into a standard 120 volt wall outlet.</p>
+<p>The on/off switch completes the connection (a circuit), from the outlet to the coil and back. When off, the loop is broken; air acts as an insulator blocking the current. When flicked on, metal meets metal, the loop closes, and current flows through the coil. Current (I) = Power (P) / Voltage (V), implying the current flowing through our circuit is 6.7 amps.</p>
+<p>Press the switch below to see how the Krups’ coil boils water, to create steam pressure.</p>
+<div class="fig">
+  <svg id="elec" viewBox="0 50 720 280" role="img" aria-labelledby="et ed">
+    <title id="et">Electric circuit: wall, switch, heating coil, back to the wall</title>
+    <desc id="ed">A loop of wire from a wall plug through a switch and a heating coil under the boiler water and back. Closing the switch lets current flow, the coil glows and the water warms.</desc>
+    <rect x="380" y="70" width="240" height="150" rx="10" class="oc" fill="#e8edf2"/>
+    <rect id="wat" x="382" y="100" width="236" height="118" fill="#2768a8" opacity=".45"/>
+    <rect id="heat" x="382" y="100" width="236" height="118" fill="#d83616" opacity="0" style="transition:opacity .4s"/>
+    <text x="500" y="92" text-anchor="middle" font-size="16" font-weight="600" fill="#5d5344">boiler water</text>
+    <rect class="o" x="52" y="130" width="58" height="80" rx="6" fill="url(#gSlate)"/>
+    <text x="81" y="118" text-anchor="middle" font-size="16" font-weight="600" fill="#5d5344">wall, 120 V</text>
+    <rect x="102" y="136" width="12" height="8" fill="#e4e8ed" stroke="#4c5163"/><rect x="102" y="196" width="12" height="8" fill="#e4e8ed" stroke="#4c5163"/>
+    <path id="loop" d="M114 140 H230 M310 140 H400 M540 140 H620 V300 H80 V204 H102" fill="none" stroke="#4c5163" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+    <path id="cur" d="M114 140 H230 M310 140 H400 M540 140 H620 V300 H80 V204 H102" fill="none" stroke="#e09a00" stroke-width="3" stroke-linejoin="round" class="flow" style="opacity:0;transition:opacity .3s"/>
+    <path id="coil" d="M400 140 l12 -26 l12 52 l12 -52 l12 52 l12 -52 l12 52 l12 -52 l12 52 l12 -52 l12 52 l8 -26" fill="none" stroke="#7a8393" stroke-width="5" stroke-linejoin="round" style="transition:stroke .4s"/>
+    <g id="blade" style="transform-origin:230px 140px;transition:transform .35s"><rect x="230" y="136" width="82" height="8" rx="3" fill="#c8573f" stroke="#1d1b18" stroke-width="1.5"/></g>
+    <circle cx="230" cy="140" r="7" fill="#e09a00" stroke="#1d1b18" stroke-width="2"/><circle cx="312" cy="140" r="6" fill="#e09a00" stroke="#1d1b18" stroke-width="2"/>
+    <text x="270" y="190" text-anchor="middle" font-size="16" font-weight="600" fill="#5d5344">switch</text>
+    <text x="490" y="262" text-anchor="middle" font-size="16" font-weight="600" fill="#5d5344">heating coil</text>
+    <path d="M490 168 V248" class="pl dash"/>
+  </svg>
+  <div class="ctl"><button id="sw" type="button" aria-pressed="false">Press the switch</button><button id="rs" type="button">Reset</button></div>
+  <div class="read"><div>Switch<b id="e1">Open</b></div><div>Current<b id="e2">0 A</b></div><div>Heat power<b id="e3">0 W</b></div><div>Water<b id="e4">20 °C</b></div></div>
+  <p class="figsub" style="margin-top:8px" id="e5">The loop is broken, so nothing flows.</p>
+</div>
+<p style="margin-top:20px">Now, aren’t you curious how long my Krups takes to boil the water? Just for fun, let’s do a little algebra to figure it out.</p>
+<p>First, let’s find the energy needed to boil the water.</p>
+<div class="work oneline">Energy required (Q) = water mass (m) × water’s specific heat (c) × difference in temp (ΔT)</div>
+<p>Let’s say you want to make a cup of espresso. You need to raise the temp of 300 ml (0.3 kg) of water from 20 to 100 °C (room temp to boiling). And it takes 4,186 joules of energy to heat up 1 kg of water 1 °C (just take my word for it). So,</p>
+<div class="work">Q = 0.3 kg × 4,186 J × 80 ≈ 100,000 joules</div>
+<p>So, it should take around 2 minutes for my 800 watt Krups to boil the water.</p>
+<div class="work">Time (t) = energy needed (Q) ÷ power<br>
+t = 100,000 J ÷ 800 W = 125 seconds (~2 minutes)</div>
+<p>In the name of science, I timed my 40 year old machine this morning and it did in fact take 2 minutes. Shoutout physics!</p>
+
+<h2>Why drip coffee is just dirty water</h2>
+<p>Drip coffee relies on gravity. Gravity is weak as hell, pushing down with ~1 kPa. That’s a thousandth of the pressure from a 9 bar fancy espresso machine. Hence, drip requires a medium grind for the water to permeate, and it takes forever (forever = a few minutes).</p>
+<p>The finer the grind, the more coffee surface area exposed to the water, the faster it dissolves, the richer your coffee.</p>
+<p>I will admit, my Krups is not a 9 bar mechanical pump machine. It relies solely on steam pressure (no mechanical pump), so my morning cup is actually somewhere between dirty water and <i>caffè crema</i>.</p>
+<table class="tbl"><tr><th></th><th>Drip</th><th>My Krups</th><th>Fancy machine</th></tr>
+<tr><td>Pressure</td><td>gravity</td><td>2-3 bar</td><td>9-10 bar</td></tr>
+<tr><td>Grind</td><td>medium</td><td>fine</td><td>very fine</td></tr>
+<tr><td>Brew time</td><td>8 minutes</td><td>2-4 minutes</td><td>25-30 seconds</td></tr>
+<tr><td>Cup</td><td>350 mL</td><td>240 mL</td><td>60 mL</td></tr></table>
+<p style="margin-top:20px">But, I like it that way. My little Krups 963 may not make café-quality espresso, but it has lasted 40 years. And it’s designed simply enough that when I need to, I can (and do) actually take it apart to fix it. In an age of planned obsolescence, enshittification, and $1,800 smart fridges that unilaterally decide to start showing you ads, I’m quite happy with my $50 espresso maker.</p>
+<p>Amidst everything, my Krups lives on. In some small way, so does my grandfather.</p>
+
+<p class="src" style="color:var(--ink)">Big thank you to Bryan Macomber (<a href="https://mechanical-pencil.com/">Mechanical Pencil</a>) and Bartosz Ciechanowski (<a href="https://ciechanow.ski/">ciechanow.ski</a>) for inspiring this post with their amazing interactive engineering visualizations. Go check them out asap.</p>
+<p class="src" style="border-top:none;margin-top:8px;padding-top:0"><b style="color:var(--ink)">Sources:</b> <a href="https://www.manualslib.com/manual/679704/Krups-963.html?page=3#manual">Krups 963 instruction book (ManualsLib)</a> · <a href="https://www.engineeringtoolbox.com/saturated-steam-properties-d_457.html">Saturated steam properties (Engineering Toolbox)</a> · <a href="https://fortune.com/2025/09/19/samsung-family-hub-refrigerators-advertisements/">Fortune on Samsung’s refrigerator ads</a></p>
+</main>
+<script>
+(function(){
+  var svg=document.getElementById("boom"),btn=document.getElementById("toggle");
+  btn.addEventListener("click",function(){var o=svg.classList.toggle("open");btn.setAttribute("aria-pressed",String(o));btn.textContent=o?"Close it back up":"Pull it apart"});
+  function set(p,on){
+    var g=svg.querySelector('g[data-part="'+p+'"]');if(g)g.classList.toggle("hl-part",on);
+    svg.querySelectorAll('text[data-part="'+p+'"]').forEach(function(t){t.classList.toggle("hl-lbl",on)});
+    svg.querySelectorAll('path.ldr[data-part="'+p+'"]').forEach(function(t){t.classList.toggle("hl-ldr",on)});
+  }
+  svg.querySelectorAll("text.lbl").forEach(function(t){var p=t.getAttribute("data-part");
+    t.addEventListener("mouseenter",function(){set(p,true)});t.addEventListener("mouseleave",function(){set(p,false)})});
+
+  var cut=document.getElementById("cut"),cap=document.getElementById("cap"),wl=document.getElementById("wl");
+  var T={
+   1:["Fill and seal","Water goes in through the top, and the screwed-down cap seals the boiler."],
+   2:["Heat","The heater, which sits in the base, warms the water. The steam knob is shut, so steam can't escape and pressure builds above the water. The manual says to wait about two minutes."],
+   3:["Push","Pressure presses down on the water. The only way out is a tube that starts near the bottom, so water climbs it into the arm."],
+   4:["Brew","Hot water drops through the grounds in the filter holder and into the cup. No pump anywhere: steam does the pushing."],
+   5:["Froth","Opening the steam knob almost a full turn sends steam up the valve and out the steam nozzle, for 45 to 60 seconds per the manual. It also bleeds off pressure."]
+  };
+  var lvl={1:[270,248],2:[270,248],3:[284,234],4:[306,212],5:[306,212]};
+  function go(n){
+    cut.setAttribute("data-step",n);cut.classList.toggle("s5",n===5);
+    cut.querySelectorAll("[data-on]").forEach(function(e){e.style.opacity=e.getAttribute("data-on").split(" ").indexOf(String(n))>-1?1:0});
+    wl.style.y=lvl[n][0]+"px";wl.style.height=lvl[n][1]+"px";wl.setAttribute("y",lvl[n][0]);wl.setAttribute("height",lvl[n][1]);
+    cap.innerHTML="<b>"+n+". "+T[n][0]+"</b><br>"+T[n][1];
+    document.querySelectorAll("#steps button").forEach(function(b){b.setAttribute("aria-pressed",String(+b.dataset.s===n))});
+  }
+  document.querySelectorAll("#steps button").forEach(function(b){b.addEventListener("click",function(){go(+b.dataset.s)})});
+  go(1);
+
+  (function(){
+    var on=false,T=20,last=0,raf=0,sw=document.getElementById("sw"),blade=document.getElementById("blade");
+    var cur=document.getElementById("cur"),heat=document.getElementById("heat"),coil=document.getElementById("coil");
+    function draw(){
+      blade.style.transform=on?"rotate(0deg)":"rotate(-32deg)";
+      cur.style.opacity=on?1:0;coil.style.stroke=on?"#d83616":"#7a8393";
+      heat.style.opacity=on?Math.min(.35,.05+.3*(T-20)/80):0;
+      document.getElementById("e1").textContent=on?"Closed":"Open";
+      document.getElementById("e2").textContent=on?"6.7 A":"0 A";
+      document.getElementById("e3").textContent=on?"800 W":"0 W";
+      document.getElementById("e4").textContent=Math.round(T)+" °C";
+      document.getElementById("e5").textContent=!on?(T>=99.5?"Switch open: the heating stops.":"The loop is broken, so nothing flows."):(T>=99.5?"Water has reached 100 °C. Steam will start to build.":"Loop closed: current runs through the coil, and the coil's heat flows into the water.");
+      sw.setAttribute("aria-pressed",String(on));sw.textContent=on?"Release the switch":"Press the switch";
+    }
+    function tick(ts){
+      if(!last)last=ts;var dt=(ts-last)/1000;last=ts;
+      if(on&&T<100){T=Math.min(100,T+dt*10*80/126)}
+      draw();raf=(on&&T<100)?requestAnimationFrame(tick):0;if(!raf)last=0;
+    }
+    function kick(){draw();if(!raf&&on&&T<100){last=0;raf=requestAnimationFrame(tick)}}
+    sw.addEventListener("click",function(){on=!on;kick()});
+    document.getElementById("rs").addEventListener("click",function(){on=false;T=20;if(raf){cancelAnimationFrame(raf);raf=0}last=0;draw()});
+    draw();
+  })();
+
+  var pr=document.getElementById("pr"),pv=document.getElementById("pv"),col=document.getElementById("col"),arr=document.getElementById("arrows"),hline=document.getElementById("hline"),hlab=document.getElementById("hlab"),over=document.getElementById("over");
+  function phys(){
+    var P=+pr.value,h=P*1000/(1000*9.81)*100,H=10,pxcm=180/10,hh=Math.min(h,H);
+    pv.textContent=P.toFixed(1)+" kPa";
+    var yL=220-hh*pxcm;col.setAttribute("y",yL);col.setAttribute("height",366-yL);
+    hline.setAttribute("d","M322 220 V"+yL);
+    hlab.textContent=hh.toFixed(0)+" cm";
+    over.style.opacity=h>=H?1:0;
+        var L=P>0?10+P*0.3:0,s="";
+    [78,118,158,198].forEach(function(x){if(L>0)s+="M"+x+" "+(216-L)+" V212 m-6 -8 l6 8 l6 -8 "});
+    arr.setAttribute("d","");arr.innerHTML=L>0?'<path d="'+s+'"/>':"";
+  }
+  pr.addEventListener("input",phys);phys();
+})();
+</script>
+</body>
+</html>
